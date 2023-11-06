@@ -37,7 +37,7 @@
           :style="{ margin:'0', padding: '0', background: '#fff', minHeight: '100vh' }"
       >
         <template v-if="currentPage === 'moviePage'">
-          <movie-mod/>
+          <movie-detail/>
         </template>
         <template v-else-if="currentPage === 'friendPage'">
           <friend-mod/>
@@ -100,6 +100,7 @@ import FriendMod from "@/components/FriendMod";
 import ExtFuncMod from "@/components/ExtFuncMod";
 import AboutMod from "@/components/AboutMod";
 import UserSetMod from "@/components/UserSetMod";
+import MovieDetail from "@/components/MovieDetail";
 </script>
 
 <style scoped>
