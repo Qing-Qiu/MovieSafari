@@ -1,56 +1,119 @@
 <template>
-  <div style="overflow: scroll" v-if="this.recommendedImages.length && !detail">
-    <div v-for="(category, index) in categories" :key="index" class="guess-you-like">
-      <h2>{{ category.name }}</h2>
-      <a-button @click="refresh(index)">换一批</a-button>
-      <div class="image-grid">
-        <a-card
-            v-for="(item, itemIndex) in recommendedImages.slice(index * 8, index * 8 + 8)"
-            :key="itemIndex"
-            class="image-card"
-            hoverable
-            @click="watchDetail(item.id)"
-        >
-          <div class="card-content" v-if="this.recommendedImages.length">
-            <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
-            <a-card-meta :title="item.title" :description="item.description"/>
-          </div>
+  <div class="login-container">
+    <a-form
+        :model="formState"
+        name="basic"
+        :label-col="{ span: 8 }"
+        :wrapper-col="{ span: 16 }"
+        autocomplete="off"
+        class="login-form"
+        @submit="submitForm"
+    >
+      <a-form-item
+          label=""
+          name="search"
+          :rules="[]"
+          class="input-item"
+          style="text-align: center; flex: 1;"
+      >
+        <a-input
+            v-model:value="formState.search"
+            placeholder="输入影人或电影名称来搜索"
+            size="large"
+            style="width: 100%"
+        />
+      </a-form-item>
+      <a-form-item class="search-button-item">
+        <a-button type="primary" html-type="submit" class="submit-button" size="large">
+          <SearchOutlined/>
+        </a-button>
+      </a-form-item>
+    </a-form>
+    <div style="overflow: scroll" v-if="this.recommendedImages.length && !detail && !search">
+      <div v-for="(category, index) in categories" :key="index" class="guess-you-like">
+        <h2>{{ category.name }}</h2>
+        <a-button @click="refresh(index)">换一批</a-button>
+        <div class="image-grid">
+          <a-card
+              v-for="(item, itemIndex) in recommendedImages.slice(index * 8, index * 8 + 8)"
+              :key="itemIndex"
+              class="image-card"
+              hoverable
+              @click="watchDetail(item.id)"
+          >
+            <div class="card-content" v-if="this.recommendedImages.length">
+              <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer" @error="imgError(item)"/>
+              <a-card-meta :title="item.title" :description="item.description"/>
+            </div>
+          </a-card>
+        </div>
+      </div>
+    </div>
+    <div v-else-if="detail && !search">
+      <a-button @click="backward()">
+        <ArrowLeftOutlined/>
+      </a-button>
+      <a-card class="image-card2">
+        <a-typography-title>{{ this.movie_content.name }}</a-typography-title>
+        <a-typography>导演：{{ this.movie_content.director }}</a-typography>
+        <a-typography>主演：{{ this.movie_content.actor }}</a-typography>
+        <a-typography>类型：{{ this.movie_content.tag }}</a-typography>
+        <a-typography>评分：{{ this.movie_content.rate }}</a-typography>
+        <a-rate v-model:value="this.movie_content.rate" allow-half/>
+        <a-typography>评价人数：{{ this.movie_content.popular }}</a-typography>
+        <a-typography>年份：{{ this.movie_content.year }}</a-typography>
+        <a-typography>制片国家/地区：{{ this.movie_content.country }}</a-typography>
+        <a-typography>剧情简介：{{ this.movie_content.summary }}</a-typography>
+        <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"
+             @error="imgError2(this.movie_content)"/>
+      </a-card>
+    </div>
+    <div v-else-if="search">
+      <a-button @click="backward()">
+        <ArrowLeftOutlined/>
+      </a-button>
+      <div v-if="this.movies===null">
+        共查询到0部电影
+      </div>
+      <div v-else>
+        以下展示{{ Math.min(20, this.movies.length) }}部电影。
+      </div>
+      <div v-for="(movie,index) in this.movies" :key="index">
+        <a-card class="image-card2">
+          <a-typography-title>{{ movie.name }}</a-typography-title>
+          <a-typography>导演：{{ movie.director }}</a-typography>
+          <a-typography>主演：{{ movie.actor }}</a-typography>
+          <a-typography>类型：{{ movie.tag }}</a-typography>
+          <a-typography>评分：{{ movie.rate }}</a-typography>
+          <a-rate v-model:value="movie.rate" allow-half/>
+          <a-typography>评价人数：{{ movie.popular }}</a-typography>
+          <a-typography>年份：{{ movie.year }}</a-typography>
+          <a-typography>制片国家/地区：{{ movie.country }}</a-typography>
+          <a-typography>剧情简介：{{ movie.summary }}</a-typography>
+          <img :src="movie.img" :alt="movie.name" referrerpolicy="no-referrer" @error="imgError2(movie)"/>
         </a-card>
       </div>
     </div>
-  </div>
-  <div v-else-if="detail">
-    <a-button @click="backward()">
-      <ArrowLeftOutlined/>
-    </a-button>
-    <a-card class="image-card2">
-      <a-typography-title>{{ this.movie_content.name }}</a-typography-title>
-      <a-typography>导演：{{ this.movie_content.director }}</a-typography>
-      <a-typography>主演：{{ this.movie_content.actor }}</a-typography>
-      <a-typography>类型：{{ this.movie_content.tag }}</a-typography>
-      <a-typography>评分：{{ this.movie_content.rate }}</a-typography>
-      <a-rate v-model:value="this.movie_content.rate" allow-half/>
-      <a-typography>评价人数：{{ this.movie_content.popular }}</a-typography>
-      <a-typography>年份：{{ this.movie_content.year }}</a-typography>
-      <a-typography>制片国家/地区：{{ this.movie_content.country }}</a-typography>
-      <a-typography>剧情简介：{{ this.movie_content.summary }}</a-typography>
-      <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"/>
-    </a-card>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import {ArrowLeftOutlined} from "@ant-design/icons-vue";
+import {ArrowLeftOutlined, SearchOutlined} from "@ant-design/icons-vue";
 
 export default {
   components: {
-    ArrowLeftOutlined
+    ArrowLeftOutlined, SearchOutlined
   },
   data() {
     return {
+      formState: {
+        search: '',
+      },
       detail: false,
-      movie: 0,
+      search: false,
+      movies: {},
+      movie_id: 0,
       movie_content: [],
       recommendedImages: [],
       categories: [
@@ -96,15 +159,24 @@ export default {
 
     backward() {
       this.detail = false;
+      this.search = false;
+    },
+
+    imgError(item) {
+      item.image = require('../assets/meow.jpg')
+    },
+
+    imgError2(item) {
+      item.img = require('../assets/meow.jpg')
     },
 
     async watchDetail(id) {
       console.log(id);
       this.detail = true;
-      this.movie = id;
+      this.movie_id = id;
       try {
         const response = await axios.post('http://localhost:8080/movie/detail',
-            {movie: this.movie}).then(
+            {movie: this.movie_id}).then(
             response => {
               this.movie_content = response.data;
               console.log(response.data);
@@ -116,7 +188,24 @@ export default {
       } catch (error) {
 
       }
-    }
+    },
+
+    async submitForm() {
+      this.search = true;
+      try {
+        const response = await axios.post('http://localhost:8080/movie/search',
+            {content: this.formState.search}).then(
+            response => {
+              this.movies = response.data;
+              console.log(this.movies);
+            }, error => {
+
+            }
+        )
+
+      } catch (error) {
+      }
+    },
   },
 }
 </script>

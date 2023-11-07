@@ -1,11 +1,11 @@
 <template>
-  <a-layout style="height: 100vh;">
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible style="height: 100%;">
+  <a-layout style="height: auto">
+    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible style="height: auto;">
       <div class="logo">Movie Safari</div>
       <div class="avatar-container">
         <a-avatar :src="LogoImage" :size="50" @click="handleMenuClick('5')" style="cursor: pointer"/>
       </div>
-      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" style="height: calc(100%);">
+      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" style="height: 100vh">
         <a-menu-item key="1" @click="handleMenuClick('1')">
           <PlayCircleOutlined/>
           <span>首页</span>
@@ -37,7 +37,7 @@
           :style="{ margin:'0', padding: '0', background: '#fff', minHeight: '100vh' }"
       >
         <template v-if="currentPage === 'moviePage'">
-          <movie-mod/>
+          <movie-recommend/>
         </template>
         <template v-else-if="currentPage === 'friendPage'">
           <friend-mod/>
@@ -95,11 +95,11 @@ import {
 //   }
 // })
 import LogoImage from '@/assets/meow.jpg';
-import MovieMod from "@/components/MovieMod";
 import FriendMod from "@/components/FriendMod";
 import ExtFuncMod from "@/components/ExtFuncMod";
 import AboutMod from "@/components/AboutMod";
 import UserSetMod from "@/components/UserSetMod";
+import MovieRecommend from "@/components/MovieRecommend";
 </script>
 
 <style scoped>
