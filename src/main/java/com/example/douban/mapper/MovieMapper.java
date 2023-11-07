@@ -13,4 +13,6 @@ public interface MovieMapper {
     Movie findMovieById(@Param("id") String id);
 
     ArrayList<Movie> findMovieByTag(String tag);
+
+    ArrayList<Movie> findMovieByKeywords(@Param("keyword") String keyword);
 }

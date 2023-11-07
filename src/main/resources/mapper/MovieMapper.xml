@@ -26,4 +26,22 @@
         FROM movie
         ORDER BY rand()
     </select>
+    <select id="findMovieByKeywords" resultType="com.example.douban.pojo.Movie">
+        SELECT movieID,
+               name,
+               director,
+               actor,
+               genre,
+               tag,
+               summary,
+               rate / 2 as rate,
+               popular,
+               year,
+               ratingsum,
+               img,
+               tags,
+               country
+        FROM movie
+        WHERE name LIKE CONCAT('%', #{keyword}, '%') LIMIT 20
+    </select>
 </mapper>

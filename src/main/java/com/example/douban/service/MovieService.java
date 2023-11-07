@@ -23,4 +23,8 @@ public class MovieService {
     public ArrayList<Movie> findMovieByTag(String tag) {
         return movieMapper.findMovieByTag(tag);
     }
+
+    public ArrayList<Movie> findMovieByKeyWords(String keyword) {
+        return movieMapper.findMovieByKeywords(keyword);
+    }
 }
