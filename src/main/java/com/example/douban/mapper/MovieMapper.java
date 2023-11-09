@@ -12,7 +12,9 @@ import java.util.ArrayList;
 public interface MovieMapper {
     Movie findMovieById(@Param("id") String id);
 
-    ArrayList<Movie> findMovieByTag(String tag);
+    ArrayList<Movie> findAllMovies();
+
+    ArrayList<Movie> findMovieByTag(@Param("tag1") String tag1, @Param("tag2") String tag2, @Param("tag3") String tag3);
 
     ArrayList<Movie> findMovieByKeywords(@Param("keyword") String keyword);
 }

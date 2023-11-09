@@ -19,7 +19,7 @@ public class MovieController {
     @PostMapping("/recommend")
     public ResponseEntity<ArrayList<Movie>> handleOpenPage(@RequestBody Map<String, String> userData) {
         try {
-            ArrayList<Movie> movies = movieService.findMovieByTag("");
+            ArrayList<Movie> movies = movieService.findAllMovies();
             return ResponseEntity.ok(movies);
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,6 +42,18 @@ public class MovieController {
     public ResponseEntity<ArrayList<Movie>> handleSearchPage(@RequestBody Map<String, String> movieData) {
         try {
             ArrayList<Movie> movies = movieService.findMovieByKeyWords(movieData.get("content"));
+            return ResponseEntity.ok(movies);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/classify")
+    public ResponseEntity<ArrayList<Movie>> handleClassifyPage(@RequestBody Map<String, String> movieData) {
+        try {
+            System.out.println(movieData);
+            ArrayList<Movie> movies = movieService.findMovieByTag(movieData.get("tag1"), movieData.get("tag2"), movieData.get("tag3"));
             return ResponseEntity.ok(movies);
         } catch (Exception e) {
             e.printStackTrace();
