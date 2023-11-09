@@ -3,22 +3,26 @@
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible style="height: auto;">
       <div class="logo">Movie Safari</div>
       <div class="avatar-container">
-        <a-avatar :src="LogoImage" :size="50" @click="handleMenuClick('5')" style="cursor: pointer"/>
+        <a-avatar :src="LogoImage" :size="50" @click="handleMenuClick('6')" style="cursor: pointer"/>
       </div>
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" style="height: 100vh">
         <a-menu-item key="1" @click="handleMenuClick('1')">
-          <PlayCircleOutlined/>
+          <home-outlined/>
           <span>首页</span>
         </a-menu-item>
         <a-menu-item key="2" @click="handleMenuClick('2')">
-          <smile-outlined/>
-          <span>好友</span>
+          <PlayCircleOutlined/>
+          <span>电影中心</span>
         </a-menu-item>
         <a-menu-item key="3" @click="handleMenuClick('3')">
+          <smile-outlined/>
+          <span>好友列表</span>
+        </a-menu-item>
+        <a-menu-item key="4" @click="handleMenuClick('4')">
           <video-camera-outlined/>
           <span>其他功能</span>
         </a-menu-item>
-        <a-menu-item key="4" @click="handleMenuClick('4')">
+        <a-menu-item key="5" @click="handleMenuClick('5')">
           <InfoOutlined/>
           <span>关于</span>
         </a-menu-item>
@@ -36,8 +40,11 @@
       <a-layout-content
           :style="{ margin:'0', padding: '0', background: '#fff', minHeight: '100vh' }"
       >
-        <template v-if="currentPage === 'moviePage'">
-          <movie-recommend/>
+        <template v-if="currentPage === 'mainPage'">
+          <recommend-search-mod/>
+        </template>
+        <template v-else-if="currentPage === 'moviePage'">
+          <movie-center-mod/>
         </template>
         <template v-else-if="currentPage === 'friendPage'">
           <friend-mod/>
@@ -61,22 +68,25 @@ import {ref} from 'vue';
 
 const selectedKeys = ref(['1']);
 const collapsed = ref(false);
-const currentPage = ref('moviePage');
+const currentPage = ref('mainPage');
 const handleMenuClick = (key) => {
   switch (key) {
     case '1':
-      currentPage.value = 'moviePage';
+      currentPage.value = 'mainPage';
       break;
     case '2':
-      currentPage.value = 'friendPage';
+      currentPage.value = 'moviePage';
       break;
     case '3':
-      currentPage.value = 'extFuncPage';
+      currentPage.value = 'friendPage';
       break;
     case '4':
-      currentPage.value = 'aboutPage';
+      currentPage.value = 'extFuncPage';
       break;
     case '5':
+      currentPage.value = 'aboutPage';
+      break;
+    case '6':
       currentPage.value = 'userSetPage';
       break;
   }
@@ -87,7 +97,8 @@ import {
   SmileOutlined,
   InfoOutlined,
   MenuUnfoldOutlined,
-  MenuFoldOutlined
+  MenuFoldOutlined,
+  HomeOutlined
 } from "@ant-design/icons-vue";
 // export default defineComponent({
 //   name: "HomePage",
@@ -99,7 +110,8 @@ import FriendMod from "@/components/FriendMod";
 import ExtFuncMod from "@/components/ExtFuncMod";
 import AboutMod from "@/components/AboutMod";
 import UserSetMod from "@/components/UserSetMod";
-import MovieRecommend from "@/components/MovieRecommend";
+import RecommendSearchMod from "@/components/RecommendSearchMod";
+import MovieCenterMod from "@/components/MovieCenterMod";
 </script>
 
 <style scoped>

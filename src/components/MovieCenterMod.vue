@@ -1,0 +1,257 @@
+<template>
+  <div>
+    <div>
+      <a-radio-group v-model:value="value1" button-style="solid" @change="onChange1()">
+        <a-radio-button value="a">类型</a-radio-button>
+        <a-radio-button value="b">动作</a-radio-button>
+        <a-radio-button value="c">动画</a-radio-button>
+        <a-radio-button value="d">喜剧</a-radio-button>
+        <a-radio-button value="e">犯罪</a-radio-button>
+        <a-radio-button value="f">科幻</a-radio-button>
+        <a-radio-button value="g">历史</a-radio-button>
+        <a-radio-button value="h">音乐</a-radio-button>
+        <a-radio-button value="i">浪漫</a-radio-button>
+        <a-radio-button value="j">悬疑</a-radio-button>
+        <a-radio-button value="k">惊悚</a-radio-button>
+        <a-radio-button value="l">其它</a-radio-button>
+      </a-radio-group>
+    </div>
+    <div :style="{ marginTop: '16px' }">
+      <a-radio-group v-model:value="value2" button-style="solid" @change="onChange1()">
+        <a-radio-button value="a">年份</a-radio-button>
+        <a-radio-button value="2015">2015</a-radio-button>
+        <a-radio-button value="2014">2014</a-radio-button>
+        <a-radio-button value="2013">2013</a-radio-button>
+        <a-radio-button value="2012">2012</a-radio-button>
+        <a-radio-button value="2011">2011</a-radio-button>
+        <a-radio-button value="2010">2010</a-radio-button>
+        <a-radio-button value="2009">2009</a-radio-button>
+        <a-radio-button value="2008">2008</a-radio-button>
+        <a-radio-button value="2007">2007</a-radio-button>
+        <a-radio-button value="2006">2006</a-radio-button>
+        <a-radio-button value="l">更久之前</a-radio-button>
+      </a-radio-group>
+    </div>
+    <div :style="{ marginTop: '16px'}">
+      <a-radio-group v-model:value="value3" button-style="solid" @change="onChange1()">
+        <a-radio-button value="a">国家与地区</a-radio-button>
+        <a-radio-button value="b">内地</a-radio-button>
+        <a-radio-button value="c">中国香港</a-radio-button>
+        <a-radio-button value="d">中国台湾</a-radio-button>
+        <a-radio-button value="e">美国</a-radio-button>
+        <a-radio-button value="f">韩国</a-radio-button>
+        <a-radio-button value="g">日本</a-radio-button>
+        <a-radio-button value="h">俄罗斯</a-radio-button>
+        <a-radio-button value="i">印度</a-radio-button>
+        <a-radio-button value="j">泰国</a-radio-button>
+        <a-radio-button value="k">英国</a-radio-button>
+        <a-radio-button value="l">其他国家</a-radio-button>
+      </a-radio-group>
+    </div>
+  </div>
+  <div class="image-grid">
+    <a-card
+        v-for="(item, itemIndex) in movie_list.slice(0, 8)"
+        :key="itemIndex"
+        class="image-card"
+        hoverable
+        @click="watchDetail(item.id)"
+    >
+      <div class="card-content" v-if="this.movie_list.length">
+        <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer" @error="imgError(item)"/>
+        <a-card-meta :title="item.title" :description="item.description"/>
+      </div>
+    </a-card>
+  </div>
+  <div>
+    <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="500" @change="onChange"/>
+  </div>
+</template>
+
+<script>
+import {ref} from 'vue';
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      value1: 'a',
+      value2: 'a',
+      value3: 'a',
+      tag1: '',
+      tag2: '',
+      tag3: '',
+      current1: 1,
+      movie_list: [],
+    }
+  },
+  beforeMount() {
+    this.fetchData();
+  },
+  methods: {
+    async fetchData() {
+      try {
+        this.tag1 = '';
+        switch (this.value1) {
+          case "a":
+            this.tag1 = '全部';
+            break;
+          case "b":
+            this.tag1 = '动作';
+            break;
+          case "c":
+            this.tag1 = '动画';
+            break;
+          case "d":
+            this.tag1 = '喜剧';
+            break;
+          case "e":
+            this.tag1 = '犯罪';
+            break;
+          case "f":
+            this.tag1 = '科幻';
+            break;
+          case "g":
+            this.tag1 = '历史';
+            break;
+          case "h":
+            this.tag1 = '音乐';
+            break;
+          case "i":
+            this.tag1 = '浪漫';
+            break;
+          case "j":
+            this.tag1 = '悬疑';
+            break;
+          case "k":
+            this.tag1 = '惊悚';
+            break;
+          case "l":
+            this.tag1 = '其它';
+            break;
+        }
+        this.tag2 = '';
+        switch (this.value2) {
+          case "a":
+            this.tag2 = '全部';
+            break;
+          case "l":
+            this.tag2 = '其它';
+            break;
+          default:
+            this.tag2 = this.value2;
+            break;
+        }
+        this.tag3 = '';
+        switch (this.value3) {
+          case "a":
+            this.tag3 = '全部';
+            break;
+          case "b":
+            this.tag3 = '大陆';
+            break;
+          case "c":
+            this.tag3 = '香港';
+            break;
+          case "d":
+            this.tag3 = '台湾';
+            break;
+          case "e":
+            this.tag3 = '美国';
+            break;
+          case "f":
+            this.tag3 = '韩国';
+            break;
+          case "g":
+            this.tag3 = '日本';
+            break;
+          case "h":
+            this.tag3 = '俄罗斯';
+            break;
+          case "i":
+            this.tag3 = '印度';
+            break;
+          case "j":
+            this.tag3 = '泰国';
+            break;
+          case "k":
+            this.tag3 = '英国';
+            break;
+          case "l":
+            this.tag3 = '其它';
+            break;
+        }
+        const response = await axios.post("http://localhost:8080/movie/classify",
+            {tag1: this.tag1, tag2: this.tag2, tag3: this.tag3}).then(
+            response => {
+              for (let i = 0; i < 32; i++) {
+                this.movie_list.push({
+                  title: response.data[i].name,
+                  id: response.data[i].movieID,
+                  image: response.data[i].img
+                })
+              }
+              console.log(response.data);
+            }, error => {
+
+            }
+        )
+      } catch (error) {
+
+      }
+    },
+
+    imgError(item) {
+      item.image = require('../assets/meow.jpg')
+    },
+
+    onChange1() {
+      this.movie_list = [];
+      this.fetchData();
+    },
+
+    onChange() {
+
+    },
+
+    async watchDetail(id) {
+      console.log(id);
+      // this.detail = true;
+      this.movie_id = id;
+      try {
+        const response = await axios.post('http://localhost:8080/movie/detail',
+            {movie: this.movie_id}).then(
+            response => {
+              this.movie_content = response.data;
+              console.log(response.data);
+              console.log(this.movie_content);
+            },
+            error => {
+            }
+        )
+      } catch (error) {
+
+      }
+    }
+    ,
+  }
+}
+</script>
+
+<style scoped>
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.image-card {
+  width: 20%; /* Adjust this to control the card width */
+  margin: 20px 25px 20px 30px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+}
+</style>

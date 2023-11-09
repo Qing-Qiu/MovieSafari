@@ -30,12 +30,12 @@
       </a-form-item>
     </a-form>
     <div style="overflow: scroll" v-if="this.recommendedImages.length && !detail && !search">
-      <div v-for="(category, index) in categories" :key="index" class="guess-you-like">
-        <h2>{{ category.name }}</h2>
-        <a-button @click="refresh(index)">换一批</a-button>
+      <div class="guess-you-like">
+        <h2>猜你喜欢</h2>
+        <a-button @click="refresh(0)">换一批</a-button>
         <div class="image-grid">
           <a-card
-              v-for="(item, itemIndex) in recommendedImages.slice(index * 8, index * 8 + 8)"
+              v-for="(item, itemIndex) in recommendedImages.slice(0, 8)"
               :key="itemIndex"
               class="image-card"
               hoverable
@@ -116,12 +116,6 @@ export default {
       movie_id: 0,
       movie_content: [],
       recommendedImages: [],
-      categories: [
-        {name: "猜你喜欢", items: "123"},
-        {name: "剧情片", items: "123"},
-        {name: "爱情片", items: "123"},
-        {name: "动作片", items: "123"},
-      ],
     };
   },
   beforeMount() {
@@ -133,7 +127,6 @@ export default {
         const response = await axios.post('http://localhost:8080/movie/recommend',
             {}).then(
             response => {
-              // console.log(response.data[0]);
               for (let i = 0; i < 32; i++) {
                 this.recommendedImages.push({
                   title: response.data[i].name,
@@ -141,7 +134,6 @@ export default {
                   image: response.data[i].img
                 });
               }
-              // console.log(response.data[0], response.data[1]);
               console.log(this.recommendedImages);
             },
             error => {
