@@ -1,11 +1,11 @@
 <template>
   <a-layout style="height: auto">
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible style="height: auto;">
+    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible style="height: auto; position: fixed">
       <div class="logo">Movie Safari</div>
       <div class="avatar-container">
         <a-avatar :src="LogoImage" :size="50" @click="handleMenuClick('6')" style="cursor: pointer"/>
       </div>
-      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" style="height: 100vh">
+      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" style="height: 100vh;">
         <a-menu-item key="1" @click="handleMenuClick('1')">
           <home-outlined/>
           <span>首页</span>
@@ -28,7 +28,7 @@
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
-    <a-layout>
+    <a-layout :style="{ marginLeft:(collapsed?'80px':'200px')}">
       <a-layout-header style="background: #fff; padding: 0;display: flex;align-items: center">
         <menu-unfold-outlined
             v-if="collapsed"

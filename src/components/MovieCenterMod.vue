@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!detail">
     <div>
       <a-radio-group v-model:value="value1" button-style="solid" @change="onChange1()">
         <a-radio-button value="a">类型</a-radio-button>
@@ -10,7 +10,7 @@
         <a-radio-button value="f">科幻</a-radio-button>
         <a-radio-button value="g">历史</a-radio-button>
         <a-radio-button value="h">音乐</a-radio-button>
-        <a-radio-button value="i">浪漫</a-radio-button>
+        <a-radio-button value="i">爱情</a-radio-button>
         <a-radio-button value="j">悬疑</a-radio-button>
         <a-radio-button value="k">惊悚</a-radio-button>
         <a-radio-button value="l">其它</a-radio-button>
@@ -48,33 +48,58 @@
         <a-radio-button value="l">其他国家</a-radio-button>
       </a-radio-group>
     </div>
+    <div class="image-grid">
+      <a-card
+          v-for="(item, itemIndex) in movie_list"
+          :key="itemIndex"
+          class="image-card"
+          hoverable
+          @click="watchDetail(item.id)"
+      >
+        <div class="card-content" v-if="this.movie_list.length">
+          <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer" @error="imgError(item)"/>
+          <a-card-meta :title="item.title" :description="item.description"/>
+        </div>
+      </a-card>
+    </div>
+    <div>
+      <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count"
+                    :default-page-size="8" :show-size-changer="false" @change="onChange"/>
+    </div>
   </div>
-  <div class="image-grid">
-    <a-card
-        v-for="(item, itemIndex) in movie_list.slice(0, 8)"
-        :key="itemIndex"
-        class="image-card"
-        hoverable
-        @click="watchDetail(item.id)"
-    >
-      <div class="card-content" v-if="this.movie_list.length">
-        <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer" @error="imgError(item)"/>
-        <a-card-meta :title="item.title" :description="item.description"/>
-      </div>
+  <div v-else>
+    <a-button @click="backward()">
+      <ArrowLeftOutlined/>
+    </a-button>
+    <a-card class="image-card2">
+      <a-typography-title>{{ this.movie_content.name }}</a-typography-title>
+      <a-typography>导演：{{ this.movie_content.director }}</a-typography>
+      <a-typography>主演：{{ this.movie_content.actor }}</a-typography>
+      <a-typography>类型：{{ this.movie_content.tag }}</a-typography>
+      <a-typography>评分：{{ this.movie_content.rate }}</a-typography>
+      <a-rate v-model:value="this.movie_content.rate" allow-half/>
+      <a-typography>评价人数：{{ this.movie_content.popular }}</a-typography>
+      <a-typography>年份：{{ this.movie_content.year }}</a-typography>
+      <a-typography>制片国家/地区：{{ this.movie_content.region }}</a-typography>
+      <a-typography>剧情简介：{{ this.movie_content.summary }}</a-typography>
+      <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"
+           @error="imgError2(this.movie_content)"/>
     </a-card>
-  </div>
-  <div>
-    <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="500" @change="onChange"/>
   </div>
 </template>
 
 <script>
 import {ref} from 'vue';
 import axios from "axios";
+import {ArrowLeftOutlined} from "@ant-design/icons-vue";
 
 export default {
+  components: {
+    ArrowLeftOutlined,
+  },
   data() {
     return {
+      detail: false,
       value1: 'a',
       value2: 'a',
       value3: 'a',
@@ -82,7 +107,12 @@ export default {
       tag2: '',
       tag3: '',
       current1: 1,
+      movie_id: 0,
+      movie_content: [],
       movie_list: [],
+      limit: 0,
+      offset: 0,
+      count: 0,
     }
   },
   beforeMount() {
@@ -118,7 +148,7 @@ export default {
             this.tag1 = '音乐';
             break;
           case "i":
-            this.tag1 = '浪漫';
+            this.tag1 = '爱情';
             break;
           case "j":
             this.tag1 = '悬疑';
@@ -181,10 +211,22 @@ export default {
             this.tag3 = '其它';
             break;
         }
-        const response = await axios.post("http://localhost:8080/movie/classify",
+        const response1 = await axios.post("http://localhost:8080/movie/count",
             {tag1: this.tag1, tag2: this.tag2, tag3: this.tag3}).then(
             response => {
-              for (let i = 0; i < 32; i++) {
+              this.count = response.data;
+              console.log(this.count);
+            }, error => {
+
+            }
+        )
+        this.limit = 8;
+        this.offset = (this.current1 - 1) * 8;
+        this.movie_list = [];
+        const response = await axios.post("http://localhost:8080/movie/classify",
+            {tag1: this.tag1, tag2: this.tag2, tag3: this.tag3, limit: this.limit, offset: this.offset}).then(
+            response => {
+              for (let i = 0; i < 8; i++) {
                 this.movie_list.push({
                   title: response.data[i].name,
                   id: response.data[i].movieID,
@@ -205,18 +247,28 @@ export default {
       item.image = require('../assets/meow.jpg')
     },
 
+    imgError2(item) {
+      item.img = require('../assets/meow.jpg')
+    },
+
     onChange1() {
-      this.movie_list = [];
+      this.current1 = 1;
       this.fetchData();
     },
 
     onChange() {
+      this.limit = 8;
+      this.offset = (this.current1 - 1) * 8;
+      this.fetchData();
+    },
 
+    backward() {
+      this.detail = false;
     },
 
     async watchDetail(id) {
       console.log(id);
-      // this.detail = true;
+      this.detail = true;
       this.movie_id = id;
       try {
         const response = await axios.post('http://localhost:8080/movie/detail',
@@ -248,6 +300,12 @@ export default {
 .image-card {
   width: 20%; /* Adjust this to control the card width */
   margin: 20px 25px 20px 30px;
+}
+
+.image-card2 {
+  width: 50%; /* Adjust this to control the card width */
+  /*margin: 100px 10px 100px 10px;*/
+  margin: auto;
 }
 
 .card-content {

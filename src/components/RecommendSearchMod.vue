@@ -14,19 +14,14 @@
           name="search"
           :rules="[]"
           class="input-item"
-          style="text-align: center; flex: 1;"
+          style="text-align: center; margin-left: 350px"
       >
-        <a-input
+        <a-input-search
             v-model:value="formState.search"
             placeholder="输入影人或电影名称来搜索"
             size="large"
-            style="width: 100%"
+            @search="submitForm"
         />
-      </a-form-item>
-      <a-form-item class="search-button-item">
-        <a-button type="primary" html-type="submit" class="submit-button" size="large">
-          <SearchOutlined/>
-        </a-button>
       </a-form-item>
     </a-form>
     <div style="overflow: scroll" v-if="this.recommendedImages.length && !detail && !search">
@@ -62,7 +57,7 @@
         <a-rate v-model:value="this.movie_content.rate" allow-half/>
         <a-typography>评价人数：{{ this.movie_content.popular }}</a-typography>
         <a-typography>年份：{{ this.movie_content.year }}</a-typography>
-        <a-typography>制片国家/地区：{{ this.movie_content.country }}</a-typography>
+        <a-typography>制片国家/地区：{{ this.movie_content.region }}</a-typography>
         <a-typography>剧情简介：{{ this.movie_content.summary }}</a-typography>
         <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"
              @error="imgError2(this.movie_content)"/>
@@ -88,7 +83,7 @@
           <a-rate v-model:value="movie.rate" allow-half/>
           <a-typography>评价人数：{{ movie.popular }}</a-typography>
           <a-typography>年份：{{ movie.year }}</a-typography>
-          <a-typography>制片国家/地区：{{ movie.country }}</a-typography>
+          <a-typography>制片国家/地区：{{ movie.region }}</a-typography>
           <a-typography>剧情简介：{{ movie.summary }}</a-typography>
           <img :src="movie.img" :alt="movie.name" referrerpolicy="no-referrer" @error="imgError2(movie)"/>
         </a-card>
@@ -103,7 +98,7 @@ import {ArrowLeftOutlined, SearchOutlined} from "@ant-design/icons-vue";
 
 export default {
   components: {
-    ArrowLeftOutlined, SearchOutlined
+    ArrowLeftOutlined
   },
   data() {
     return {
