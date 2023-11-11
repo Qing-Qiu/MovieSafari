@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -52,9 +53,21 @@ public class MovieController {
     @PostMapping("/classify")
     public ResponseEntity<ArrayList<Movie>> handleClassifyPage(@RequestBody Map<String, String> movieData) {
         try {
-            System.out.println(movieData);
-            ArrayList<Movie> movies = movieService.findMovieByTag(movieData.get("tag1"), movieData.get("tag2"), movieData.get("tag3"));
+            ArrayList<Movie> movies = movieService.findMovieByTag(movieData.get("tag1"), movieData.get("tag2"), movieData.get("tag3"), movieData.get("limit"), movieData.get("offset"));
             return ResponseEntity.ok(movies);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/count")
+    public ResponseEntity<Integer> handleCountPage(@RequestBody Map<String, String> movieData) {
+        try {
+
+            Integer cnt = movieService.countMovieByTag(movieData.get("tag1"), movieData.get("tag2"), movieData.get("tag3"));
+            System.out.println(cnt);
+            return ResponseEntity.ok(cnt);
         } catch (Exception e) {
             e.printStackTrace();
         }

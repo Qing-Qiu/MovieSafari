@@ -43,7 +43,56 @@
             AND genre NOT LIKE CONCAT('%','科幻','%')
             AND genre NOT LIKE CONCAT('%','历史','%')
             AND genre NOT LIKE CONCAT('%','音乐','%')
-            AND genre NOT LIKE CONCAT('%','浪漫','%')
+            AND genre NOT LIKE CONCAT('%','爱情','%')
+            AND genre NOT LIKE CONCAT('%','悬疑','%')
+            AND genre NOT LIKE CONCAT('%','惊悚','%')
+        </if>
+        <if test="tag2 == '全部'">
+        </if>
+        <if test="tag2 != '全部' and tag2 != '其它'">
+            AND year = #{tag2}
+        </if>
+        <if test="tag2 == '其它'">
+            AND year &lt; 2006
+        </if>
+        <if test="tag3 == '全部'">
+        </if>
+        <if test="tag3 != '全部' and tag3 != '其它'">
+            AND region LIKE CONCAT('%',#{tag3},'%')
+        </if>
+        <if test="tag3 == '其它'">
+            AND region NOT LIKE CONCAT('%','大陆','%')
+            AND region NOT LIKE CONCAT('%','香港','%')
+            AND region NOT LIKE CONCAT('%','台湾','%')
+            AND region NOT LIKE CONCAT('%','美国','%')
+            AND region NOT LIKE CONCAT('%','韩国','%')
+            AND region NOT LIKE CONCAT('%','日本','%')
+            AND region NOT LIKE CONCAT('%','俄罗斯','%')
+            AND region NOT LIKE CONCAT('%','印度','%')
+            AND region NOT LIKE CONCAT('%','泰国','%')
+            AND region NOT LIKE CONCAT('%','英国','%')
+        </if>
+        ORDER BY CAST(popular AS SIGNED) DESC
+        LIMIT ${limit} OFFSET ${offset}
+    </select>
+    <select id="countMovieByTag" resultType="int">
+        SELECT COUNT(movieID) AS cnt
+        FROM movie
+        WHERE 1 = 1
+        <if test="tag1 == '全部'">
+        </if>
+        <if test="tag1 != '全部' and tag1 != '其它'">
+            AND genre LIKE CONCAT('%', #{tag1}, '%')
+        </if>
+        <if test="tag1 == '其它'">
+            AND genre NOT LIKE CONCAT('%','动作','%')
+            AND genre NOT LIKE CONCAT('%','动画','%')
+            AND genre NOT LIKE CONCAT('%','喜剧','%')
+            AND genre NOT LIKE CONCAT('%','犯罪','%')
+            AND genre NOT LIKE CONCAT('%','科幻','%')
+            AND genre NOT LIKE CONCAT('%','历史','%')
+            AND genre NOT LIKE CONCAT('%','音乐','%')
+            AND genre NOT LIKE CONCAT('%','爱情','%')
             AND genre NOT LIKE CONCAT('%','悬疑','%')
             AND genre NOT LIKE CONCAT('%','惊悚','%')
         </if>
@@ -72,7 +121,7 @@
             AND region NOT LIKE CONCAT('%','泰国','%')
             AND region NOT LIKE CONCAT('%','英国','%')
         </if>
-        ORDER BY popular DESC
+        ORDER BY CAST(popular AS SIGNED) DESC
     </select>
     <select id="findMovieByKeywords" resultType="com.example.douban.pojo.Movie">
         SELECT movieID,

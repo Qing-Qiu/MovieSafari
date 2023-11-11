@@ -24,8 +24,12 @@ public class MovieService {
         return movieMapper.findAllMovies();
     }
 
-    public ArrayList<Movie> findMovieByTag(String tag1, String tag2, String tag3) {
-        return movieMapper.findMovieByTag(tag1, tag2, tag3);
+    public ArrayList<Movie> findMovieByTag(String tag1, String tag2, String tag3, String limit, String offset) {
+        return movieMapper.findMovieByTag(tag1, tag2, tag3, limit, offset);
+    }
+
+    public Integer countMovieByTag(String tag1, String tag2, String tag3) {
+        return movieMapper.countMovieByTag(tag1, tag2, tag3);
     }
 
     public ArrayList<Movie> findMovieByKeyWords(String keyword) {

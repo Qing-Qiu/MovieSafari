@@ -17,6 +17,6 @@ public class Movie {
     private String rate;
     private String popular;
     private String year;
-    private String country;
+    private String region;
     private String img;
 }
