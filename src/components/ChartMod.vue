@@ -1,10 +1,13 @@
 <template>
-  123
+123
 </template>
 
-<script setup>
-
+<script>
+export default {
+  name: "ChartMod"
+}
 </script>
 
 <style scoped>
+
 </style>

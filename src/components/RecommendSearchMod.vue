@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div>
     <a-form
         :model="formState"
         name="basic"
@@ -24,7 +24,7 @@
         />
       </a-form-item>
     </a-form>
-    <div style="overflow: scroll" v-if="this.recommendedImages.length && !detail && !search">
+    <div v-if="this.recommendedImages.length && !detail && !search">
       <div class="guess-you-like">
         <h2>猜你喜欢</h2>
         <a-button @click="refresh(0)">换一批</a-button>

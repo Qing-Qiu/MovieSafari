@@ -1,10 +1,8 @@
 <template>
   <a-layout style="height: auto">
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible style="height: auto; position: fixed">
-      <div class="logo">Movie Safari</div>
-      <div class="avatar-container">
-        <a-avatar :src="LogoImage" :size="50" @click="handleMenuClick('6')" style="cursor: pointer"/>
-      </div>
+      <img :src="(collapsed ? require('../assets/logo2.svg') : require('../assets/logo.svg'))"
+           style="cursor: pointer; stroke-opacity: 0" alt="movie safari"/>
       <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" style="height: 100vh;">
         <a-menu-item key="1" @click="handleMenuClick('1')">
           <home-outlined/>
@@ -18,10 +16,16 @@
           <smile-outlined/>
           <span>好友列表</span>
         </a-menu-item>
-        <a-menu-item key="4" @click="handleMenuClick('4')">
-          <video-camera-outlined/>
-          <span>其他功能</span>
-        </a-menu-item>
+        <a-sub-menu key="4" title="其他功能">
+          <a-menu-item key="4-1" @click="handleMenuClick('4-1')">
+            <SettingOutlined/>
+            <span>大模型嵌套</span>
+          </a-menu-item>
+          <a-menu-item key="4-2" @click="handleMenuClick('4-2')">
+            <BarChartOutlined/>
+            <span>可视化展示</span>
+          </a-menu-item>
+        </a-sub-menu>
         <a-menu-item key="5" @click="handleMenuClick('5')">
           <InfoOutlined/>
           <span>关于</span>
@@ -36,6 +40,22 @@
             @click="() => (collapsed = !collapsed)"
         />
         <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)"/>
+        <a-dropdown class="avatar-container">
+          <a-avatar :src="UserImage" :size="50" style="cursor: pointer;"/>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>
+                修改密码
+              </a-menu-item>
+              <a-menu-item>
+                设置偏好
+              </a-menu-item>
+              <a-menu-item>
+                登出
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </a-layout-header>
       <a-layout-content
           :style="{ margin:'0', padding: '0', background: '#fff', minHeight: '100vh' }"
@@ -49,14 +69,14 @@
         <template v-else-if="currentPage === 'friendPage'">
           <friend-mod/>
         </template>
-        <template v-else-if="currentPage === 'extFuncPage'">
-          <ext-func-mod/>
+        <template v-else-if="currentPage === 'modelPage'">
+          <model-mod/>
+        </template>
+        <template v-else-if="currentPage === 'chartPage'">
+          <chart-mod/>
         </template>
         <template v-else-if="currentPage === 'aboutPage'">
           <about-mod/>
-        </template>
-        <template v-else-if="currentPage === 'userSetPage'">
-          <user-set-mod/>
         </template>
       </a-layout-content>
     </a-layout>
@@ -80,20 +100,22 @@ const handleMenuClick = (key) => {
     case '3':
       currentPage.value = 'friendPage';
       break;
-    case '4':
-      currentPage.value = 'extFuncPage';
+    case '4-1':
+      currentPage.value = 'modelPage';
+      break;
+    case '4-2':
+      currentPage.value = 'chartPage';
       break;
     case '5':
       currentPage.value = 'aboutPage';
-      break;
-    case '6':
-      currentPage.value = 'userSetPage';
       break;
   }
 };
 import {
   PlayCircleOutlined,
   VideoCameraOutlined,
+  SettingOutlined,
+  BarChartOutlined,
   SmileOutlined,
   InfoOutlined,
   MenuUnfoldOutlined,
@@ -105,11 +127,11 @@ import {
 //   components: {}, setup() {
 //   }
 // })
-import LogoImage from '@/assets/meow.jpg';
+import UserImage from '@/assets/meow.jpg';
 import FriendMod from "@/components/FriendMod";
-import ExtFuncMod from "@/components/ExtFuncMod";
+import ModelMod from "@/components/ModelMod";
+import ChartMod from "@/components/ChartMod";
 import AboutMod from "@/components/AboutMod";
-import UserSetMod from "@/components/UserSetMod";
 import RecommendSearchMod from "@/components/RecommendSearchMod";
 import MovieCenterMod from "@/components/MovieCenterMod";
 </script>
@@ -140,6 +162,8 @@ import MovieCenterMod from "@/components/MovieCenterMod";
 }
 
 .avatar-container {
-  margin-bottom: 20px;
+  margin-bottom: -15px;
+  margin-right: 20px;
+  margin-left: auto;
 }
 </style>

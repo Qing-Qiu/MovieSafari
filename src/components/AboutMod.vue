@@ -1,24 +1,25 @@
 <template>
-  <div class="login-container">
-    <a-space direction="vertical">
-      <a-typography-title level="5">你好！我是秋刀鱼</a-typography-title>
-      <GithubFilled spin="spin" />
-    </a-space>
+  <div style="
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    /*width:200px;*/
+    height:500px;
+">
+    <a-avatar :size="100" @click="redirectTo" style="cursor: pointer;">
+      <GithubFilled spin="spin" style="font-size: 100px"/>
+    </a-avatar>
   </div>
 </template>
 
 <script setup>
 import {GithubFilled} from "@ant-design/icons-vue";
 
+const redirectTo = () => {
+  window.open('https://github.com/Qing-Qiu/MovieSafari', '_blank');
+}
 </script>
 
 <style scoped>
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100vh;
-  background-color: #f0f0f0;
-}
 
 </style>
