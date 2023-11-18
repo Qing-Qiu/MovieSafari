@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!detail">
+  <template v-if="!detail">
     <div>
       <a-radio-group v-model:value="value1" button-style="solid" @change="onChange1()">
         <a-radio-button value="a">类型</a-radio-button>
@@ -66,26 +66,64 @@
       <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count"
                     :default-page-size="8" :show-size-changer="false" @change="onChange"/>
     </div>
-  </div>
-  <div v-else>
+  </template>
+  <template v-else>
     <a-button @click="backward()">
       <ArrowLeftOutlined/>
     </a-button>
-    <a-card class="image-card2">
-      <a-typography-title>{{ this.movie_content.name }}</a-typography-title>
-      <a-typography>导演：{{ this.movie_content.director }}</a-typography>
-      <a-typography>主演：{{ this.movie_content.actor }}</a-typography>
-      <a-typography>类型：{{ this.movie_content.tag }}</a-typography>
-      <a-typography>评分：{{ this.movie_content.rate }}</a-typography>
-      <a-rate v-model:value="this.movie_content.rate" allow-half/>
-      <a-typography>评价人数：{{ this.movie_content.popular }}</a-typography>
-      <a-typography>年份：{{ this.movie_content.year }}</a-typography>
-      <a-typography>制片国家/地区：{{ this.movie_content.region }}</a-typography>
-      <a-typography>剧情简介：{{ this.movie_content.summary }}</a-typography>
-      <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"
-           @error="imgError2(this.movie_content)"/>
+    <a-card class="image-card2" >
+      <a-row>
+        <a-col :lg="4"></a-col>
+        <a-col :lg="8">
+          <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"
+               @error="imgError2(this.movie_content)"
+               style="display: block;width: auto"
+          />
+        </a-col>
+        <a-col :lg="8">
+          <a-typography>
+            <a-typography-title style="text-align: left">{{ this.movie_content.name }}</a-typography-title>
+            <a-typography-paragraph style="text-align: left">
+              <a-typography-text strong>导演：</a-typography-text>
+              {{ this.movie_content.director }}
+            </a-typography-paragraph>
+            <a-typography-paragraph style="text-align: left">
+              <a-typography-text strong>主演：</a-typography-text>
+              {{ this.movie_content.actor }}
+            </a-typography-paragraph>
+            <a-typography-paragraph style="text-align: left">
+              <a-typography-text strong>类型：</a-typography-text>
+              {{ this.movie_content.tag }}
+            </a-typography-paragraph>
+            <a-typography-paragraph style="text-align: left">
+              <a-typography-text strong>评分：</a-typography-text>
+              {{ this.movie_content.rate }}
+            </a-typography-paragraph>
+            <!--              <a-typography-paragraph style="text-align: left">-->
+            <!--                <a-rate v-model:value="this.movie_content.rate" allow-half/>-->
+            <!--              </a-typography-paragraph>-->
+            <a-typography-paragraph style="text-align: left">
+              <a-typography-text strong>评价人数：</a-typography-text>
+              {{ this.movie_content.popular }}
+            </a-typography-paragraph>
+            <a-typography-paragraph style="text-align: left">
+              <a-typography-text strong>年份：</a-typography-text>
+              {{ this.movie_content.year }}
+            </a-typography-paragraph>
+            <a-typography-paragraph style="text-align: left">
+              <a-typography-text strong>制片国家/地区：</a-typography-text>
+              {{ this.movie_content.region }}
+            </a-typography-paragraph>
+            <a-typography-paragraph style="text-align: left">
+              <a-typography-text strong>剧情简介：</a-typography-text>
+              {{ this.movie_content.summary }}
+            </a-typography-paragraph>
+          </a-typography>
+        </a-col>
+        <a-col :lg="4"></a-col>
+      </a-row>
     </a-card>
-  </div>
+  </template>
 </template>
 
 <script>
@@ -303,9 +341,9 @@ export default {
 }
 
 .image-card2 {
-  width: 50%; /* Adjust this to control the card width */
-  /*margin: 100px 10px 100px 10px;*/
-  margin: auto;
+  /*width: 50%; !* Adjust this to control the card width *!*/
+  /*!*margin: 100px 10px 100px 10px;*!*/
+  /*margin: auto;*/
 }
 
 .card-content {

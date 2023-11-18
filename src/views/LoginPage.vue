@@ -6,8 +6,6 @@
         :label-col="{ span: 8 }"
         :wrapper-col="{ span: 16 }"
         autocomplete="off"
-        @finish="onFinish"
-        @finishFailed="onFinishFailed"
         class="login-form"
         @submit="submitForm"
     >
@@ -55,13 +53,13 @@
           注册
         </a-typography-link>
         <a-typography style="display: inline;">或</a-typography>&nbsp;
-        <a-typography-link style="display: inline;">游客登陆</a-typography-link>
+        <a-typography-link style="display: inline;" @click="tourist()">游客登陆</a-typography-link>
       </a-form-item>
     </a-form>
   </div>
 </template>
 <script setup>
-import {reactive} from 'vue';
+import {reactive, ref} from 'vue';
 import {useRouter} from 'vue-router';
 import axios from "axios";
 
@@ -73,6 +71,8 @@ const formState = reactive({
   // remember: true,
 });
 
+let nickname = ref('');
+
 const submitForm = async () => {
   try {
     const response = await axios.post('http://localhost:8080/auth/login',
@@ -80,7 +80,10 @@ const submitForm = async () => {
           username: formState.username,
           password: formState.password
         });
-    if (response.data === "success") {
+    if (response.data[0] === "success") {
+      nickname = response.data[1];
+      sessionStorage.setItem('username', formState.username);
+      sessionStorage.setItem('nickname', nickname);
       await router.push('/homepage');
     } else {
 
@@ -94,23 +97,11 @@ const register = () => {
   router.push('/auth/register');
 }
 
+const tourist = () => {
+  sessionStorage.setItem('username', '游客');
+  router.push('/homepage');
+}
 
-const onFinish = values => {
-  // if (values.username === '123456' && values.password === '123456') {
-  //   // 密码验证成功
-  //   console.log('Success:', values);
-  //
-  //   // 执行页面跳转
-  //   router.push('/homepage');
-  // } else {
-  //   // 密码验证失败
-  //   console.log('密码错误');
-  // }
-  console.log('Success:', values);
-};
-const onFinishFailed = errorInfo => {
-  console.log('Failed:', errorInfo);
-};
 </script>
 <style scoped>
 .login-container {

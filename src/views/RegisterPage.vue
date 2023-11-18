@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="login-container" v-if="stat==='login'" :key="1">
     <a-form
         ref="formRef"
         :model="formState"
@@ -9,23 +9,21 @@
         :rules="rules"
         autocomplete="off"
         @finish="onFinish"
-        @finishFailed="onFinishFailed"
         class="login-form"
         @validate="handleValidate"
     >
       <h1 class="login-title">用户注册</h1>
       <a-form-item
-          label="用户名"
-          name="username"
+          label="昵称"
+          name="nickname"
           class="input-item"
           style="text-align: left;"
       >
         <a-input
-            v-model:value="formState.username"
-            placeholder="用户名"
+            v-model:value="formState.nickname"
+            placeholder="昵称"
         />
       </a-form-item>
-
       <a-form-item
           label="密码"
           name="password"
@@ -65,6 +63,36 @@
       </a-form-item>
     </a-form>
   </div>
+  <div class="login-container" v-else-if="stat==='success'" :key="2">
+    <a-result
+        status="success"
+        title="注册成功!"
+        :sub-title="generator(username)"
+    >
+      <template #extra>
+        <a-button @click="login()">返回至登录页面</a-button>
+      </template>
+    </a-result>
+  </div>
+  <div class="login-container" v-else-if="stat==='prefer'" :key="3">
+    <a-form
+        ref="formRef"
+        :model="formState"
+        name="basic"
+        :label-col="{ span: 8 }"
+        :wrapper-col="{ span: 16 }"
+        :rules="rules"
+        autocomplete="off"
+        @finish="onFinish"
+        class="login-form"
+        @validate="handleValidate"
+    >
+      <h1 class="login-title">请选择您感兴趣的类型</h1>
+      <a-button @click="submitPrefer">完成</a-button>
+
+    </a-form>
+
+  </div>
 </template>
 <script setup>
 import {reactive, ref} from 'vue';
@@ -73,11 +101,13 @@ import axios from "axios";
 
 const router = useRouter();
 const formRef = ref();
+let stat = ref('login');
+let username = ref('');
 
 const formState = reactive({
-  username: '',
+  nickname: '',
   password: '',
-  password2: '', //在前端验证是否和password一致
+  password2: '',
 });
 
 const checkPwd = async (_rule, value) => {
@@ -89,10 +119,10 @@ const checkPwd = async (_rule, value) => {
 }
 
 const rules = {
-  username: [
+  nickname: [
     {
       required: true,
-      message: '请输入用户名',
+      message: '请输入昵称',
       trigger: 'change'
     }
   ],
@@ -125,24 +155,52 @@ const onFinish = async values => {
   console.log('Success:', values);
   const response = await axios.post('http://localhost:8080/auth/register',
       {
-        username: formState.username,
+        nickname: formState.nickname,
         password: formState.password
       });
-  if (response.data === "success") {
-    alert("注册成功");
-    await router.push('/auth/login');
-  } else if (response.data === "existed") {
-    alert("用户名已注册");
-    window.location.reload();
+  if (response.data[0] === "success") {
+    username.value = response.data[1];
+    var textArea = document.createElement("textarea");
+    textArea.value = response.data[1];
+    textArea.style.position = "fixed";
+    textArea.style.top = 0;
+    textArea.style.left = 0;
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = 0;
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? '成功复制到剪贴板' : '无法复制到剪贴板';
+      console.log(msg);
+    } catch (err) {
+      console.error('无法执行复制命令', err);
+    }
+    document.body.removeChild(textArea);
+
+    stat.value = 'prefer';
+    console.log(stat);
+    console.log(response.data[1]);
   } else {
     alert("错误");
     window.location.reload();
   }
 
 };
-const onFinishFailed = errorInfo => {
-  console.log('Failed:', errorInfo);
-};
+
+const generator = (username) => {
+  return "请记住您的账号：" + username + "\n账号已经复制到您的剪贴板.";
+}
+
+const submitPrefer = () => {
+  stat.value = 'success';
+}
+
 </script>
 <style scoped>
 .login-container {

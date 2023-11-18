@@ -3,7 +3,8 @@
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible style="height: auto; position: fixed">
       <img :src="(collapsed ? require('../assets/logo2.svg') : require('../assets/logo.svg'))"
            style="cursor: pointer; stroke-opacity: 0" alt="movie safari"/>
-      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" style="height: 100vh;">
+      <a-menu v-model:selectedKeys="selectedKeys" :openKeys="openKeys" theme="dark" mode="inline"
+              style="height: 100vh;">
         <a-menu-item key="1" @click="handleMenuClick('1')">
           <home-outlined/>
           <span>首页</span>
@@ -12,21 +13,17 @@
           <PlayCircleOutlined/>
           <span>电影中心</span>
         </a-menu-item>
-        <a-menu-item key="3" @click="handleMenuClick('3')">
-          <smile-outlined/>
-          <span>好友列表</span>
-        </a-menu-item>
-        <a-sub-menu key="4" title="其他功能">
-          <a-menu-item key="4-1" @click="handleMenuClick('4-1')">
+        <a-sub-menu key="3" title="其他功能">
+          <a-menu-item key="3-1" @click="handleMenuClick('3-1')">
             <SettingOutlined/>
             <span>大模型嵌套</span>
           </a-menu-item>
-          <a-menu-item key="4-2" @click="handleMenuClick('4-2')">
+          <a-menu-item key="3-2" @click="handleMenuClick('3-2')">
             <BarChartOutlined/>
             <span>可视化展示</span>
           </a-menu-item>
         </a-sub-menu>
-        <a-menu-item key="5" @click="handleMenuClick('5')">
+        <a-menu-item key="4" @click="handleMenuClick('4')">
           <InfoOutlined/>
           <span>关于</span>
         </a-menu-item>
@@ -44,13 +41,10 @@
           <a-avatar :src="UserImage" :size="50" style="cursor: pointer;"/>
           <template #overlay>
             <a-menu>
-              <a-menu-item>
-                修改密码
-              </a-menu-item>
-              <a-menu-item>
+              <a-menu-item :key="5" @click="handleMenuClick('5')">
                 设置偏好
               </a-menu-item>
-              <a-menu-item>
+              <a-menu-item :key="6" @click="handleMenuClick('6')">
                 登出
               </a-menu-item>
             </a-menu>
@@ -66,9 +60,6 @@
         <template v-else-if="currentPage === 'moviePage'">
           <movie-center-mod/>
         </template>
-        <template v-else-if="currentPage === 'friendPage'">
-          <friend-mod/>
-        </template>
         <template v-else-if="currentPage === 'modelPage'">
           <model-mod/>
         </template>
@@ -78,15 +69,32 @@
         <template v-else-if="currentPage === 'aboutPage'">
           <about-mod/>
         </template>
+        <template v-else-if="currentPage === 'preferPage'">
+          <prefer-mod/>
+        </template>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
-
+<script>
+export default {
+  data() {
+    return {
+      username: '游客',
+    }
+  },
+  // beforeMount() {
+  //   this.username = sessionStorage.getItem('username');
+  //   //获取当前用户的id和昵称
+  //   console.log(this.username);
+  // }
+}
+</script>
 <script setup>
 import {ref} from 'vue';
 
 const selectedKeys = ref(['1']);
+const openKeys = ref(['3']);
 const collapsed = ref(false);
 const currentPage = ref('mainPage');
 const handleMenuClick = (key) => {
@@ -97,17 +105,21 @@ const handleMenuClick = (key) => {
     case '2':
       currentPage.value = 'moviePage';
       break;
-    case '3':
-      currentPage.value = 'friendPage';
-      break;
-    case '4-1':
+    case '3-1':
       currentPage.value = 'modelPage';
       break;
-    case '4-2':
+    case '3-2':
       currentPage.value = 'chartPage';
       break;
-    case '5':
+    case '4':
       currentPage.value = 'aboutPage';
+      break;
+    case '5':
+      currentPage.value = 'preferPage';
+      break;
+    case '6':
+      sessionStorage.clear();
+      router.push('/auth/login');
       break;
   }
 };
@@ -122,18 +134,14 @@ import {
   MenuFoldOutlined,
   HomeOutlined
 } from "@ant-design/icons-vue";
-// export default defineComponent({
-//   name: "HomePage",
-//   components: {}, setup() {
-//   }
-// })
 import UserImage from '@/assets/meow.jpg';
-import FriendMod from "@/components/FriendMod";
 import ModelMod from "@/components/ModelMod";
 import ChartMod from "@/components/ChartMod";
 import AboutMod from "@/components/AboutMod";
 import RecommendSearchMod from "@/components/RecommendSearchMod";
 import MovieCenterMod from "@/components/MovieCenterMod";
+import router from "@/router/router";
+import PreferMod from "@/components/PreferMod";
 </script>
 
 <style scoped>
