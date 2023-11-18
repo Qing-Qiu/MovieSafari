@@ -25,4 +25,8 @@ public class AccountService {
     public int insertAccount(Account account) {
         return accountMapper.insertAccount(account);
     }
+
+    public String getNewAccountId() {
+        return accountMapper.getNewAccountId();
+    }
 }

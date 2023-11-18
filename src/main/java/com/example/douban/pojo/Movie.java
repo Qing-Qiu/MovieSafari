@@ -13,6 +13,7 @@ public class Movie {
     private String director;
     private String actor;
     private String tag;
+    private String genre;
     private String summary;
     private String rate;
     private String popular;

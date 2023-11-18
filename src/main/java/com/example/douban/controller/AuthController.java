@@ -17,34 +17,33 @@ public class AuthController {
     AccountService accountService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> handleLoginFormSubmission(@RequestBody Map<String, String> formData) {
+    public ResponseEntity<String[]> handleLoginFormSubmission(@RequestBody Map<String, String> formData) {
         try {
             String username = formData.get("username");
             String password = formData.get("password");
             Account account = accountService.findAccountByUsername(username);
-            if (account == null) return ResponseEntity.ok("failed");
+            if (account == null) return ResponseEntity.ok(new String[]{"failed", "failed"});
             if (Objects.equals(account.getPassword(), password)) {
-                return ResponseEntity.ok("success");
-            } else return ResponseEntity.ok("failed");
+                return ResponseEntity.ok(new String[]{"success", account.getNickname()});
+            } else return ResponseEntity.ok(new String[]{"failed", "failed"});
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok("failed");
+        return ResponseEntity.ok(new String[]{"failed", "failed"});
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> handleRegisterFormSubmission(@RequestBody Map<String, String> formData) {
+    public ResponseEntity<String[]> handleRegisterFormSubmission(@RequestBody Map<String, String> formData) {
         try {
-            String username = formData.get("username");
+            String nickname = formData.get("nickname");
             String password = formData.get("password");
-            Account account = accountService.findAccountByUsername(username);
-            if (account != null) return ResponseEntity.ok("existed");
-            Account account1 = new Account(username, password);
+            String new_id = accountService.getNewAccountId();
+            Account account1 = new Account(new_id, nickname, password);
             int cnt = accountService.insertAccount(account1);
-            return ResponseEntity.ok("success");
+            return ResponseEntity.ok(new String[]{"success", new_id});
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok("failed");
+        return ResponseEntity.ok(new String[]{"failed", "failed"});
     }
 }

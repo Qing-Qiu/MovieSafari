@@ -64,9 +64,7 @@ public class MovieController {
     @PostMapping("/count")
     public ResponseEntity<Integer> handleCountPage(@RequestBody Map<String, String> movieData) {
         try {
-
             Integer cnt = movieService.countMovieByTag(movieData.get("tag1"), movieData.get("tag2"), movieData.get("tag3"));
-            System.out.println(cnt);
             return ResponseEntity.ok(cnt);
         } catch (Exception e) {
             e.printStackTrace();

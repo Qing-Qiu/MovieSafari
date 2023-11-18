@@ -22,9 +22,9 @@
         WHERE movieID = #{id}
     </select>
     <select id="findAllMovies" resultType="com.example.douban.pojo.Movie">
-        SELECT movieID, name, img
+        SELECT *
         FROM movie
-        ORDER BY rand()
+        ORDER BY rand() LIMIT 8
     </select>
     <select id="findMovieByTag" resultType="com.example.douban.pojo.Movie">
         SELECT movieID, name, img

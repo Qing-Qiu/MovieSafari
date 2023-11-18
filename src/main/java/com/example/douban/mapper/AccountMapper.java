@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AccountMapper {
 //    @Select("SELECT * FROM account WHERE username= #{username}")
-    Account findAccountByUsername(@Param("username") String username);
+    Account findAccountByUsername(@Param("id") String id);
 
 //    @Update("UPDATE account SET password= #{password} WHERE username= #{username}")
     int updateAccount(Account account);
     int insertAccount(Account account);
+    String getNewAccountId();
 }

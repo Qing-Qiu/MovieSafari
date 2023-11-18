@@ -5,18 +5,22 @@
 <mapper namespace="com.example.douban.mapper.AccountMapper">
     <select id="findAccountByUsername" resultType="com.example.douban.pojo.Account">
         SELECT *
-        FROM account
-        WHERE username = #{username}
+        FROM userinfo
+        WHERE id = #{id}
     </select>
 
     <update id="updateAccount" parameterType="com.example.douban.pojo.Account">
-        UPDATE account
+        UPDATE userinfo
         SET password= #{password}
-        WHERE username = #{username}
+        WHERE id = #{id}
     </update>
 
     <insert id="insertAccount" parameterType="com.example.douban.pojo.Account">
-        INSERT INTO account(username, password)
-        VALUES(#{username}, #{password})
+        INSERT INTO userinfo(id, nickname, password)
+        VALUES(#{id}, #{nickname}, #{password})
     </insert>
+
+    <select id="getNewAccountId" resultType="string">
+        SELECT MAX(CAST(id AS SIGNED)) + 1 FROM userinfo
+    </select>
 </mapper>
