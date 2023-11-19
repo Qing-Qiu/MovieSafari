@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.douban.mapper.PersonMapper">
+    <select id="findPersonById" resultType="com.example.douban.pojo.Person">
+        SELECT * FROM persons WHERE personID = #{id};
+    </select>
+    <select id="findPersonByMovie" resultType="com.example.douban.pojo.Person">
+        SELECT personID, name, img, sex, birthday, birthplace, summary, role
+        FROM persons, relationship
+        WHERE relationship.person_id = persons.personID
+        AND relationship.movie_id = #{id};
+    </select>
+</mapper>

@@ -6,7 +6,6 @@ import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Map;
 
