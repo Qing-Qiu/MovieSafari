@@ -20,7 +20,11 @@ public class PersonService {
         return personMapper.findPersonById(id);
     }
 
-    public ArrayList<Person> findPersonByMovie(String id) {
-        return personMapper.findPersonByMovie(id);
+    public ArrayList<Person> findPersonByMovie(String id, String limit, String offset) {
+        return personMapper.findPersonByMovie(id, limit, offset);
+    }
+
+    public Integer countPersonByMovie(String id) {
+        return personMapper.countPersonByMovie(id);
     }
 }

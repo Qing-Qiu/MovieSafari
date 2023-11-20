@@ -6,6 +6,12 @@
     <select id="findCommentByMovie" resultType="com.example.douban.pojo.Comment">
         SELECT userID, nickname, comment, movieID
         FROM comments
+        WHERE movieID = #{id}
+        LIMIT ${limit} OFFSET ${offset};
+    </select>
+    <select id="countCommentByMovie" resultType="int">
+        SELECT count(*)
+        FROM comments
         WHERE movieID = #{id};
     </select>
 </mapper>

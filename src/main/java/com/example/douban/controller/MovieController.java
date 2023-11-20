@@ -52,7 +52,8 @@ public class MovieController {
     @PostMapping("/classify")
     public ResponseEntity<ArrayList<Movie>> handleClassifyPage(@RequestBody Map<String, String> movieData) {
         try {
-            ArrayList<Movie> movies = movieService.findMovieByTag(movieData.get("tag1"), movieData.get("tag2"), movieData.get("tag3"), movieData.get("limit"), movieData.get("offset"));
+            ArrayList<Movie> movies = movieService.findMovieByTag(
+                    movieData.get("tag1"), movieData.get("tag2"), movieData.get("tag3"), movieData.get("limit"), movieData.get("offset"));
             return ResponseEntity.ok(movies);
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,7 +64,8 @@ public class MovieController {
     @PostMapping("/count")
     public ResponseEntity<Integer> handleCountPage(@RequestBody Map<String, String> movieData) {
         try {
-            Integer cnt = movieService.countMovieByTag(movieData.get("tag1"), movieData.get("tag2"), movieData.get("tag3"));
+            Integer cnt = movieService.countMovieByTag(
+                    movieData.get("tag1"), movieData.get("tag2"), movieData.get("tag3"));
             return ResponseEntity.ok(cnt);
         } catch (Exception e) {
             e.printStackTrace();

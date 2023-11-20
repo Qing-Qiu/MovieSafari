@@ -30,8 +30,20 @@ public class PersonController {
     @PostMapping("/relevant")
     public ResponseEntity<ArrayList<Person>> handleRelevantPage(@RequestBody Map<String, String> personData) {
         try {
-            ArrayList<Person> persons = personService.findPersonByMovie(personData.get("id"));
+            ArrayList<Person> persons = personService.findPersonByMovie(
+                    personData.get("id"), personData.get("limit"), personData.get("offset"));
             return ResponseEntity.ok(persons);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/count")
+    public ResponseEntity<Integer> handleCountPage(@RequestBody Map<String, String> personData) {
+        try {
+            Integer cnt = personService.countPersonByMovie(personData.get("id"));
+            return ResponseEntity.ok(cnt);
         } catch (Exception e) {
             e.printStackTrace();
         }

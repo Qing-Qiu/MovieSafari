@@ -10,6 +10,25 @@
         SELECT personID, name, img, sex, birthday, birthplace, summary, role
         FROM persons, relationship
         WHERE relationship.person_id = persons.personID
-        AND relationship.movie_id = #{id};
+        AND relationship.movie_id = #{id}
+        ORDER BY
+        CASE
+          WHEN role = '演员' THEN 3
+          WHEN role = '导演' THEN 1
+          WHEN role = '编剧' THEN 2
+        END
+        LIMIT ${limit} OFFSET ${offset};
+    </select>
+    <select id="countPersonByMovie" resultType="int">
+        SELECT count(*)
+        FROM persons, relationship
+        WHERE relationship.person_id = persons.personID
+        AND relationship.movie_id = #{id}
+        ORDER BY
+        CASE
+          WHEN role = '演员' THEN 3
+          WHEN role = '导演' THEN 1
+          WHEN role = '编剧' THEN 2
+        END;
     </select>
 </mapper>

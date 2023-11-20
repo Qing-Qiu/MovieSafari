@@ -19,8 +19,21 @@ public class CommentController {
     @PostMapping("/comment")
     public ResponseEntity<ArrayList<Comment>> handleCommentPage(@RequestBody Map<String, String> commentData) {
         try {
-            ArrayList<Comment> comments = commentService.findCommentByMovie(commentData.get("id"));
+            ArrayList<Comment> comments = commentService.findCommentByMovie(
+                    commentData.get("id"), commentData.get("limit"), commentData.get("offset"));
             return ResponseEntity.ok(comments);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+
+
+    @PostMapping("/count")
+    public ResponseEntity<Integer> handleCountPage(@RequestBody Map<String, String> commentData) {
+        try {
+            Integer cnt = commentService.countCommentByMovie(commentData.get("id"));
+            return ResponseEntity.ok(cnt);
         } catch (Exception e) {
             e.printStackTrace();
         }

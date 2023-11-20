@@ -16,7 +16,11 @@ public class CommentService {
         this.commentMapper = commentMapper;
     }
 
-    public ArrayList<Comment> findCommentByMovie(String id) {
-        return commentMapper.findCommentByMovie(id);
+    public ArrayList<Comment> findCommentByMovie(String id, String limit, String offset) {
+        return commentMapper.findCommentByMovie(id, limit, offset);
+    }
+
+    public Integer countCommentByMovie(String id) {
+        return commentMapper.countCommentByMovie(id);
     }
 }

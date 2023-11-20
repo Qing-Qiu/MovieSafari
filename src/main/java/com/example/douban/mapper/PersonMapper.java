@@ -12,5 +12,7 @@ import java.util.ArrayList;
 public interface PersonMapper {
     Person findPersonById(@Param("id") String id);
 
-    ArrayList<Person> findPersonByMovie(@Param("id") String id);
+    ArrayList<Person> findPersonByMovie(@Param("id") String id, @Param("limit") String limit, @Param("offset") String offset);
+
+    Integer countPersonByMovie(@Param("id") String id);
 }
