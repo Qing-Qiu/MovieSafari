@@ -1,34 +1,38 @@
 <template>
   <div>
-    <a-form
-        :model="formState"
-        name="basic"
-        :label-col="{ span: 8 }"
-        :wrapper-col="{ span: 16 }"
-        autocomplete="off"
-        class="login-form"
-        @submit="submitForm"
-    >
-      <a-form-item
-          label=""
-          name="search"
-          :rules="[]"
-          class="input-item"
-          style="text-align: center; margin-left: 350px"
-      >
-        <a-input-search
-            v-model:value="formState.search"
-            placeholder="请输入搜索内容"
-            size="large"
-            @search="submitForm"
-        />
-        <!--        <a-radio-group v-model:value="val123">-->
-        <!--          <a-radio :value="1">根据内容搜索</a-radio>-->
-        <!--          <a-radio :value="2">根据影片名搜索</a-radio>-->
-        <!--          <a-radio :value="3">根据人名搜索</a-radio>-->
-        <!--        </a-radio-group>-->
-      </a-form-item>
-    </a-form>
+    <a-row>
+      <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8"></a-col>
+      <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" :xxl="12">
+        <a-form
+            :model="formState"
+            name="basic"
+            :label-col="{ span: 8 }"
+            :wrapper-col="{ span: 16 }"
+            autocomplete="off"
+            class="login-form"
+            @submit="submitForm"
+        >
+          <a-form-item
+              label=""
+              name="search"
+              :rules="[]"
+          >
+            <a-input-search
+                v-model:value="formState.search"
+                placeholder="请输入搜索内容"
+                size="large"
+                @search="submitForm"
+            />
+            <!--        <a-radio-group v-model:value="val123">-->
+            <!--          <a-radio :value="1">根据内容搜索</a-radio>-->
+            <!--          <a-radio :value="2">根据影片名搜索</a-radio>-->
+            <!--          <a-radio :value="3">根据人名搜索</a-radio>-->
+            <!--        </a-radio-group>-->
+          </a-form-item>
+        </a-form>
+      </a-col>
+      <a-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" :xxl="2"></a-col>
+    </a-row>
     <template v-if="recommendedImages.length && !detail && !search">
       <div class="guess-you-like">
         <h2>猜你喜欢</h2>
@@ -53,16 +57,16 @@
       <a-button @click="backward()">
         <ArrowLeftOutlined/>
       </a-button>
-      <a-card class="image-card2" >
+      <a-card class="image-card2">
         <a-row>
-          <a-col :lg="4"></a-col>
-          <a-col :lg="8">
+          <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+          <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
             <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"
                  @error="imgError2(this.movie_content)"
                  style="display: block;width: auto"
             />
           </a-col>
-          <a-col :lg="8">
+          <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
             <a-typography>
               <a-typography-title style="text-align: left">{{ this.movie_content.name }}</a-typography-title>
               <a-typography-paragraph style="text-align: left">
@@ -81,9 +85,6 @@
                 <a-typography-text strong>评分：</a-typography-text>
                 {{ this.movie_content.rate }}
               </a-typography-paragraph>
-<!--              <a-typography-paragraph style="text-align: left">-->
-<!--                <a-rate v-model:value="this.movie_content.rate" allow-half/>-->
-<!--              </a-typography-paragraph>-->
               <a-typography-paragraph style="text-align: left">
                 <a-typography-text strong>评价人数：</a-typography-text>
                 {{ this.movie_content.popular }}
@@ -102,9 +103,55 @@
               </a-typography-paragraph>
             </a-typography>
           </a-col>
-          <a-col :lg="4"></a-col>
+          <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
         </a-row>
       </a-card>
+      <div class="image-grid">
+        <a-card
+            v-for="(item, itemIndex) in person_list"
+            :key="itemIndex"
+            class="image-card"
+            hoverable
+        >
+          <div class="card-content" v-if="this.person_list.length">
+            <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer" @error="imgError(item)"/>
+            <a-card-meta :title="item.name" :description="item.role"/>
+          </div>
+        </a-card>
+        <div
+            v-for="(item,itemIndex) in new Array((4 - person_list.length % 4) % 4)"
+            :key="itemIndex"
+            class="image-card"
+        >
+        </div>
+      </div>
+      <div>
+        <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
+                      :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
+      </div>
+      <a-row>
+        <a-col :lg="4"></a-col>
+        <a-col :lg="16">
+          <a-list
+              class="comment-list"
+              item-layout="horizontal"
+              :data-source="comment_list"
+          >
+            <template #renderItem="{ item }">
+              <a-list-item>
+                <a-comment :author="item.nickname" :avatar="item.avatar">
+                  <template #content>
+                    <a-typography-paragraph style="text-align: left">
+                      {{ item.comment }}
+                    </a-typography-paragraph>
+                  </template>
+                </a-comment>
+              </a-list-item>
+            </template>
+          </a-list>
+        </a-col>
+        <a-col :lg="4"></a-col>
+      </a-row>
     </template>
     <template v-else-if="search && !detail">
       <a-button @click="backward()">
@@ -114,7 +161,7 @@
         共查询到0部电影
       </div>
       <div v-else>
-        以下展示{{ Math.min(20, this.movies.length) }}部电影。
+        以下展示{{ this.movies.length }}部电影。
       </div>
       <div v-for="(movie,index) in this.movies" :key="index">
         <a-card class="image-card2">
@@ -148,13 +195,22 @@ export default {
       formState: {
         search: '',
       },
-      // val123: 1,
       detail: false,
       search: false,
       movies: [],
       movie_id: 0,
       movie_content: [],
       recommendedImages: [],
+      person_list: [],
+      comment_list: [],
+      current1: 1,
+      limit1: 4,
+      offset1: 0,
+      count1: 0,
+      current2: 1,
+      limit2: 8,
+      offset2: 0,
+      count2: 0,
     };
   },
   beforeMount() {
@@ -201,6 +257,8 @@ export default {
     backward() {
       this.detail = false;
       this.search = false;
+      this.current1 = 1;
+      this.offset1 = (this.current1 - 1) * 4;
     },
 
     imgError(item) {
@@ -211,11 +269,19 @@ export default {
       item.img = require('../assets/meow.jpg')
     },
 
+    onChange1() {
+      this.offset1 = (this.current1 - 1) * 4;
+      this.watchDetail(this.movie_id);
+    },
+
     async watchDetail(id) {
       console.log(id);
       this.detail = true;
       this.search = false;
       this.movie_id = id;
+      console.log(this.current1);
+      console.log(this.limit1);
+      console.log(this.offset1);
       try {
         const response = await axios.post('http://localhost:8080/movie/detail',
             {movie: this.movie_id}).then(
@@ -228,7 +294,54 @@ export default {
             }
         )
       } catch (error) {
-
+      }
+      try {
+        const response = await axios.post('http://localhost:8080/person/count',
+            {id: this.movie_id}).then(
+            response => {
+              this.count1 = response.data;
+              console.log(this.count1);
+            },
+            error => {
+            }
+        )
+      } catch (error) {
+      }
+      try {
+        const response = await axios.post('http://localhost:8080/person/relevant',
+            {id: this.movie_id, limit: this.limit1, offset: this.offset1}).then(
+            response => {
+              this.person_list = response.data;
+              console.log(this.person_list);
+            },
+            error => {
+            }
+        )
+      } catch (error) {
+      }
+      try {
+        const response = await axios.post('http://localhost:8080/comment/count',
+            {id: this.movie_id}).then(
+            response => {
+              this.count2 = response.data;
+              console.log(this.comment_list);
+            },
+            error => {
+            }
+        )
+      } catch (error) {
+      }
+      try {
+        const response = await axios.post('http://localhost:8080/comment/comment',
+            {id: this.movie_id, limit: this.limit2, offset: this.offset2}).then(
+            response => {
+              this.comment_list = response.data;
+              console.log(this.comment_list);
+            },
+            error => {
+            }
+        )
+      } catch (error) {
       }
     },
 
@@ -263,12 +376,6 @@ export default {
   width: 20%; /* Adjust this to control the card width */
   margin: 20px 25px 20px 30px;
 }
-
-/*.image-card2 {*/
-/*  width: 50%; !* Adjust this to control the card width *!*/
-/*  !*margin: 100px 10px 100px 10px;*!*/
-/*  margin: auto;*/
-/*}*/
 
 .card-content {
   display: flex;

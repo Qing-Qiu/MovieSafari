@@ -61,6 +61,12 @@
           <a-card-meta :title="item.title" :description="item.description"/>
         </div>
       </a-card>
+      <div
+          v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
+          :key="itemIndex"
+          class="image-card"
+      >
+      </div>
     </div>
     <div>
       <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count"
@@ -71,7 +77,7 @@
     <a-button @click="backward()">
       <ArrowLeftOutlined/>
     </a-button>
-    <a-card class="image-card2" >
+    <a-card class="image-card2">
       <a-row>
         <a-col :lg="4"></a-col>
         <a-col :lg="8">
@@ -268,10 +274,19 @@ export default {
                 this.movie_list.push({
                   title: response.data[i].name,
                   id: response.data[i].movieID,
-                  image: response.data[i].img
+                  image: response.data[i].img,
+                  description: response.data[i].genre
                 })
               }
               console.log(response.data);
+              for (let i = 0; i < 8; i++) {
+                if (this.movie_list[i].description !== null) {
+                  if (this.movie_list[i].description.endsWith(',')) {
+                    this.movie_list[i].description =
+                        this.movie_list[i].description.slice(0, -1);
+                  }
+                }
+              }
             }, error => {
 
             }
