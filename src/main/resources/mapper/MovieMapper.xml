@@ -140,6 +140,11 @@
                region
         FROM movie
         WHERE name LIKE CONCAT('%', #{keyword}, '%')
-        LIMIT 20
+        LIMIT ${limit} OFFSET ${offset};
+    </select>
+    <select id="countMovieByKeywords" resultType="int">
+        SELECT count(*)
+        FROM movie
+        WHERE name LIKE CONCAT('%', #{keyword}, '%');
     </select>
 </mapper>

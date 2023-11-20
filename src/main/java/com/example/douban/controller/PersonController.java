@@ -1,5 +1,6 @@
 package com.example.douban.controller;
 
+import com.example.douban.pojo.Movie;
 import com.example.douban.pojo.Person;
 import com.example.douban.service.PersonService;
 import jakarta.annotation.Resource;
@@ -43,6 +44,50 @@ public class PersonController {
     public ResponseEntity<Integer> handleCountPage(@RequestBody Map<String, String> personData) {
         try {
             Integer cnt = personService.countPersonByMovie(personData.get("id"));
+            return ResponseEntity.ok(cnt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+    @PostMapping("/relevant2")
+    public ResponseEntity<ArrayList<Movie>> handleRelevant2Page(@RequestBody Map<String, String> personData) {
+        try {
+            ArrayList<Movie> movies = personService.findMovieByPerson(
+                    personData.get("id"), personData.get("limit"), personData.get("offset"));
+            return ResponseEntity.ok(movies);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/count2")
+    public ResponseEntity<Integer> handleCount2Page(@RequestBody Map<String, String> personData) {
+        try {
+            Integer cnt = personService.countMovieByPerson(personData.get("id"));
+            return ResponseEntity.ok(cnt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+    @PostMapping("/search")
+    public ResponseEntity<ArrayList<Person>> handleSearchPage(@RequestBody Map<String, String> personData) {
+        try {
+            ArrayList<Person> persons = personService.findPersonByKeywords(
+                    personData.get("keyword"), personData.get("limit"), personData.get("offset"));
+            return ResponseEntity.ok(persons);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+    @PostMapping("/count3")
+    public ResponseEntity<Integer> handleCount3Page(@RequestBody Map<String, String> personData) {
+        try {
+            Integer cnt = personService.countPersonByKeywords(
+                    personData.get("keyword"));
             return ResponseEntity.ok(cnt);
         } catch (Exception e) {
             e.printStackTrace();

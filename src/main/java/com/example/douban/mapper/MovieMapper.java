@@ -18,5 +18,7 @@ public interface MovieMapper {
 
     Integer countMovieByTag(@Param("tag1") String tag1, @Param("tag2") String tag2, @Param("tag3") String tag3);
 
-    ArrayList<Movie> findMovieByKeywords(@Param("keyword") String keyword);
+    ArrayList<Movie> findMovieByKeywords(@Param("keyword") String keyword, @Param("limit") String limit, @Param("offset") String offset);
+
+    Integer countMovieByKeywords(@Param("keyword")String keyword);
 }

@@ -31,4 +31,43 @@
           WHEN role = '编剧' THEN 2
         END;
     </select>
+    <select id="findMovieByPerson" resultType="com.example.douban.pojo.Movie">
+        SELECT DISTINCT movieID,
+               name,
+               director,
+               actor,
+               genre,
+               tag,
+               summary,
+               rate / 2 AS rate,
+               popular,
+               year,
+               ratingsum,
+               img,
+               tags,
+               region
+        FROM movie, relationship
+        WHERE relationship.movie_id = movie.movieID
+        AND relationship.person_id = #{id}
+        ORDER BY popular DESC
+        LIMIT ${limit} OFFSET ${offset};
+    </select>
+    <select id="countMovieByPerson" resultType="int">
+        SELECT count(DISTINCT movie.movieID)
+        FROM movie, relationship
+        WHERE relationship.movie_id = movie.movieID
+        AND relationship.person_id = #{id}
+        ORDER BY popular DESC;
+    </select>
+    <select id="findPersonByKeywords" resultType="com.example.douban.pojo.Person">
+        SELECT personID, name, img, sex, birthday, birthplace, summary
+        FROM persons
+        WHERE name LIKE CONCAT('%', #{keyword}, '%')
+        LIMIT ${limit} OFFSET ${offset};
+    </select>
+    <select id="countPersonByKeywords" resultType="int">
+        SELECT count(*)
+        FROM persons
+        WHERE name LIKE CONCAT('%', #{keyword}, '%');
+    </select>
 </mapper>

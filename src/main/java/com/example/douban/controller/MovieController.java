@@ -41,8 +41,19 @@ public class MovieController {
     @PostMapping("/search")
     public ResponseEntity<ArrayList<Movie>> handleSearchPage(@RequestBody Map<String, String> movieData) {
         try {
-            ArrayList<Movie> movies = movieService.findMovieByKeyWords(movieData.get("content"));
+            ArrayList<Movie> movies = movieService.findMovieByKeyWords(movieData.get("keyword"), movieData.get("limit"), movieData.get("offset"));
             return ResponseEntity.ok(movies);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/count2")
+    public ResponseEntity<Integer> handleCount2Page(@RequestBody Map<String, String> movieData) {
+        try {
+            Integer cnt = movieService.countMovieByKeywords(movieData.get("keyword"));
+            return ResponseEntity.ok(cnt);
         } catch (Exception e) {
             e.printStackTrace();
         }
