@@ -1,28 +1,31 @@
 <template>
-  <div class="login-container">
-    <a-form
-        :model="formState"
-        name="basic"
-        :label-col="{ span: 8 }"
-        :wrapper-col="{ span: 16 }"
-        autocomplete="off"
-        class="login-form"
-    >
-      <h1 class="login-title">设置偏好</h1>
-    </a-form>
-  </div>
+  <HomePage>
+    <div class="login-container">
+      <a-form
+          :model="formState"
+          name="basic"
+          :label-col="{ span: 8 }"
+          :wrapper-col="{ span: 16 }"
+          autocomplete="off"
+          class="login-form"
+      >
+        <h1 class="login-title">设置偏好</h1>
+      </a-form>
+    </div>
+  </HomePage>
 </template>
-
+<script setup>
+import HomePage from "@/views/HomePage";
+</script>
 <script>
+
 export default {
   data() {
     return {
-      formState: {
-      },
+      formState: {},
     }
   },
-  methods: {
-  },
+  methods: {},
 }
 </script>
 

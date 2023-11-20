@@ -1,38 +1,42 @@
 <template>
-  <a-form
-      :model="formState"
-      name="basic"
-      :label-col="{ span: 8 }"
-      :wrapper-col="{ span: 16 }"
-      autocomplete="off"
-      class="login-form"
-      @submit="submitForm"
-  >
-    <a-form-item
-        label=""
-        name="search"
-        :rules="[]"
-        class="input-item"
-        style="text-align: center; margin-left: 350px"
+  <HomePage>
+    <a-form
+        :model="formState"
+        name="basic"
+        :label-col="{ span: 8 }"
+        :wrapper-col="{ span: 16 }"
+        autocomplete="off"
+        class="login-form"
+        @submit="submitForm"
     >
-      <a-input-search
-          v-model:value="formState.search"
-          placeholder="请输入问题"
-          size="large"
-          @search="submitForm"
-      />
-      <a-radio-group v-model:value="value">
-        <a-radio :value="1">常规</a-radio>
-        <a-radio :value="2">影片</a-radio>
-        <a-radio :value="3">影人</a-radio>
-      </a-radio-group>
-    </a-form-item>
-  </a-form>
-  <a-list :loading="loading" style="margin-top:200px;margin-left: 200px;margin-right: 200px;">
-    {{ this.result }}
-  </a-list>
+      <a-form-item
+          label=""
+          name="search"
+          :rules="[]"
+          class="input-item"
+          style="text-align: center; margin-left: 350px"
+      >
+        <a-input-search
+            v-model:value="formState.search"
+            placeholder="请输入问题"
+            size="large"
+            @search="submitForm"
+        />
+        <a-radio-group v-model:value="value">
+          <a-radio :value="1">常规</a-radio>
+          <a-radio :value="2">影片</a-radio>
+          <a-radio :value="3">影人</a-radio>
+        </a-radio-group>
+      </a-form-item>
+    </a-form>
+    <a-list :loading="loading" style="margin-top:200px;margin-left: 200px;margin-right: 200px;">
+      {{ this.result }}
+    </a-list>
+  </HomePage>
 </template>
-
+<script setup>
+import HomePage from "@/views/HomePage";
+</script>
 <script>
 import axios from "axios";
 

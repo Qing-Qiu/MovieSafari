@@ -54,24 +54,7 @@
       <a-layout-content
           :style="{ margin:'0', padding: '0', background: '#fff', minHeight: '100vh' }"
       >
-        <template v-if="currentPage === 'mainPage'">
-          <recommend-search-mod/>
-        </template>
-        <template v-else-if="currentPage === 'moviePage'">
-          <movie-center-mod/>
-        </template>
-        <template v-else-if="currentPage === 'modelPage'">
-          <model-mod/>
-        </template>
-        <template v-else-if="currentPage === 'chartPage'">
-          <chart-mod/>
-        </template>
-        <template v-else-if="currentPage === 'aboutPage'">
-          <about-mod/>
-        </template>
-        <template v-else-if="currentPage === 'preferPage'">
-          <prefer-mod/>
-        </template>
+        <slot/>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -96,26 +79,25 @@ import {ref} from 'vue';
 const selectedKeys = ref(['1']);
 const openKeys = ref(['3']);
 const collapsed = ref(false);
-const currentPage = ref('mainPage');
 const handleMenuClick = (key) => {
   switch (key) {
     case '1':
-      currentPage.value = 'mainPage';
+      router.push('/homepage');
       break;
     case '2':
-      currentPage.value = 'moviePage';
+      router.push('/center');
       break;
     case '3-1':
-      currentPage.value = 'modelPage';
+      router.push('/model');
       break;
     case '3-2':
-      currentPage.value = 'chartPage';
+      router.push('/chart');
       break;
     case '4':
-      currentPage.value = 'aboutPage';
+      router.push('/about');
       break;
     case '5':
-      currentPage.value = 'preferPage';
+      router.push('/prefer');
       break;
     case '6':
       sessionStorage.clear();

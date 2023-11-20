@@ -1,8 +1,13 @@
 <template>
-  <div id="ttt" style="width: 1500px;height: 500px">
-    Hello vue!
-  </div>
+  <HomePage>
+    <div id="ttt" style="width: 1500px;height: 500px">
+      Hello vue!
+    </div>
+  </HomePage>
 </template>
+<script setup>
+import HomePage from "@/views/HomePage";
+</script>
 <script>
 import * as echarts from 'echarts';
 // prettier-ignore
@@ -22,17 +27,17 @@ for (let i = 0; i < 20; i++) {
   lineData.push(d + b);
 }
 export default {
+  components: {HomePage},
   data() {
     return {
-      chart:null,
-      option:Object,
-      count:11
+      chart: null,
+      option: Object,
+      count: 11
     }
   },
-  methods: {
-  },
+  methods: {},
   created() {   /*配置项目设定*/
-  },mounted() {
+  }, mounted() {
     /*初始化Echarts*/
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('ttt'));
@@ -63,7 +68,7 @@ export default {
         }
       },
       yAxis: {
-        splitLine: { show: false },
+        splitLine: {show: false},
         axisLine: {
           lineStyle: {
             color: '#ccc'
@@ -87,8 +92,8 @@ export default {
           itemStyle: {
             borderRadius: 5,
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: '#14c8d4' },
-              { offset: 1, color: '#43eec6' }
+              {offset: 0, color: '#14c8d4'},
+              {offset: 1, color: '#43eec6'}
             ])
           },
           data: barData
@@ -100,9 +105,9 @@ export default {
           barWidth: 10,
           itemStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: 'rgba(20,200,212,0.5)' },
-              { offset: 0.2, color: 'rgba(20,200,212,0.2)' },
-              { offset: 1, color: 'rgba(20,200,212,0)' }
+              {offset: 0, color: 'rgba(20,200,212,0.5)'},
+              {offset: 0.2, color: 'rgba(20,200,212,0.2)'},
+              {offset: 1, color: 'rgba(20,200,212,0)'}
             ])
           },
           z: -12,
@@ -133,10 +138,12 @@ export default {
 .demo-table-expand {
   font-size: 0;
 }
+
 .demo-table-expand label {
   width: 90px;
   color: #99a9bf;
 }
+
 .demo-table-expand .el-form-item {
   margin-right: 0;
   margin-bottom: 0;
