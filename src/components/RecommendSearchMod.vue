@@ -33,7 +33,7 @@
       </a-col>
       <a-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" :xxl="2"></a-col>
     </a-row>
-    <template v-if="recommendedImages.length && !detail && !search">
+    <template v-if="recommendedImages.length && !search">
       <div class="guess-you-like">
         <h2>猜你喜欢</h2>
         <a-button @click="refresh()">换一批</a-button>
@@ -43,40 +43,74 @@
               :key="itemIndex"
               class="image-card"
               hoverable
-              @click="watchDetail(item.id)"
+              @click="watchMovieDetail(item.id)"
           >
             <div class="card-content" v-if="recommendedImages.length">
-              <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer" @error="imgError(item)"/>
+              <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
               <a-card-meta :title="item.title" :description="item.description"/>
             </div>
           </a-card>
         </div>
       </div>
     </template>
-    <template v-else-if="search && !detail">
+    <template v-else-if="search">
       <a-button @click="backward()">
         <ArrowLeftOutlined/>
       </a-button>
-      <div v-if="movies===null">
-        共查询到0部电影
+      <div v-if="person_list!==null">
+        共查询到{{ count1 }}位影人。
+
+        <div class="image-grid">
+          <a-card
+              v-for="(item, itemIndex) in person_list"
+              :key="itemIndex"
+              class="image-card"
+              hoverable
+              @click="watchPersonDetail(item.personID)"
+          >
+            <div class="card-content" v-if="this.person_list.length">
+              <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
+              <a-card-meta :title="item.name" :description="item.role"/>
+            </div>
+          </a-card>
+          <div
+              v-for="(item,itemIndex) in new Array((4 - person_list.length % 4) % 4)"
+              :key="itemIndex"
+              class="image-card"
+          >
+          </div>
+        </div>
+        <div v-if="count1!==0">
+          <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
+                        :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
+        </div>
       </div>
-      <div v-else>
-        以下展示{{ this.movies.length }}部电影。
-      </div>
-      <div v-for="(movie,index) in this.movies" :key="index">
-        <a-card class="image-card2">
-          <a-typography-title>{{ movie.name }}</a-typography-title>
-          <a-typography>导演：{{ movie.director }}</a-typography>
-          <a-typography>主演：{{ movie.actor }}</a-typography>
-          <a-typography>类型：{{ movie.tag }}</a-typography>
-          <a-typography>评分：{{ movie.rate }}</a-typography>
-          <a-rate v-model:value="movie.rate" allow-half/>
-          <a-typography>评价人数：{{ movie.popular }}</a-typography>
-          <a-typography>年份：{{ movie.year }}</a-typography>
-          <a-typography>制片国家/地区：{{ movie.region }}</a-typography>
-          <a-typography>剧情简介：{{ movie.summary }}</a-typography>
-          <img :src="movie.img" :alt="movie.name" referrerpolicy="no-referrer" @error="imgError2(movie)"/>
-        </a-card>
+      <div v-if="movie_list!==null">
+        为您搜索到{{ count2 }}部电影。
+        <div class="image-grid">
+          <a-card
+              v-for="(item, itemIndex) in movie_list"
+              :key="itemIndex"
+              class="image-card"
+              hoverable
+              @click="watchMovieDetail(item.movieID)"
+          >
+            <div class="card-content" v-if="this.movie_list.length">
+              <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
+              <a-card-meta :title="item.name" :description="item.role"/>
+            </div>
+          </a-card>
+          <div
+              v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
+              :key="itemIndex"
+              class="image-card"
+          >
+          </div>
+        </div>
+        <div v-if="count2!==0">
+          <a-pagination show-less-items v-model:current="current2" show-quick-jumper :total="this.count2"
+                        :default-page-size="8" :show-size-changer="false" @change="onChange2"/>
+        </div>
       </div>
     </template>
   </HomePage>
@@ -99,14 +133,10 @@ export default {
       formState: {
         search: '',
       },
-      detail: false,
       search: false,
-      movies: [],
-      movie_id: 0,
-      movie_content: [],
+      movie_list: [],
       recommendedImages: [],
       person_list: [],
-      comment_list: [],
       current1: 1,
       limit1: 4,
       offset1: 0,
@@ -121,6 +151,24 @@ export default {
     this.fetchData();
   },
   methods: {
+    onChange1() {
+      this.offset1 = (this.current1 - 1) * 4;
+      this.fetchData1();
+    },
+
+    onChange2() {
+      this.offset2 = (this.current2 - 1) * 8;
+      this.fetchData2();
+    },
+
+    async watchPersonDetail(id) {
+      await router.push('/person/' + id);
+    },
+
+    async watchMovieDetail(id) {
+      await router.push('/movie/' + id);
+    },
+
     async fetchData() {
       try {
         const response = await axios.post('http://localhost:8080/movie/recommend',
@@ -149,7 +197,6 @@ export default {
             }
         )
       } catch (error) {
-
       }
     },
 
@@ -159,43 +206,103 @@ export default {
     },
 
     backward() {
-      this.detail = false;
       this.search = false;
       this.current1 = 1;
-      this.offset1 = (this.current1 - 1) * 4;
-    },
-
-    imgError(item) {
-      item.image = require('../assets/meow.jpg')
-    },
-
-    imgError2(item) {
-      item.img = require('../assets/meow.jpg')
-    },
-
-    onChange1() {
-      this.offset1 = (this.current1 - 1) * 4;
-      this.watchDetail(this.movie_id);
-    },
-
-    async watchDetail(id) {
-      await router.push('/movie/' + id);
+      this.offset1 = 0;
+      this.current2 = 1;
+      this.offset2 = 0;
     },
 
     async submitForm() {
       this.search = true;
-      this.detail = false;
+      this.current1 = 1;
+      this.current2 = 1;
+      this.offset1 = 0;
+      this.offset2 = 0;
       try {
-        const response = await axios.post('http://localhost:8080/movie/search',
-            {content: this.formState.search}).then(
+        const response = await axios.post('http://localhost:8080/person/count3',
+            {keyword: this.formState.search}).then(
             response => {
-              this.movies = response.data;
-              console.log(this.movies);
+              this.count1 = response.data;
             }, error => {
-
             }
         )
+      } catch (error) {
+      }
+      try {
+        const response = await axios.post('http://localhost:8080/person/search',
+            {keyword: this.formState.search, limit: this.limit1, offset: this.offset1}).then(
+            response => {
+              this.person_list = response.data;
+            }, error => {
+            }
+        )
+      } catch (error) {
+      }
+      try {
+        const response = await axios.post('http://localhost:8080/movie/count2',
+            {keyword: this.formState.search}).then(
+            response => {
+              this.count2 = response.data;
+            }, error => {
+            }
+        )
+      } catch (error) {
+      }
+      try {
+        const response = await axios.post('http://localhost:8080/movie/search',
+            {keyword: this.formState.search, limit: this.limit2, offset: this.offset2}).then(
+            response => {
+              this.movie_list = response.data;
+            }, error => {
+            }
+        )
+      } catch (error) {
+      }
+    },
 
+    async fetchData1() {
+      try {
+        const response = await axios.post('http://localhost:8080/person/count3',
+            {keyword: this.formState.search}).then(
+            response => {
+              this.count1 = response.data;
+            }, error => {
+            }
+        )
+      } catch (error) {
+      }
+      try {
+        const response = await axios.post('http://localhost:8080/person/search',
+            {keyword: this.formState.search, limit: this.limit1, offset: this.offset1}).then(
+            response => {
+              this.person_list = response.data;
+            }, error => {
+            }
+        )
+      } catch (error) {
+      }
+    },
+
+    async fetchData2() {
+      try {
+        const response = await axios.post('http://localhost:8080/movie/count2',
+            {keyword: this.formState.search}).then(
+            response => {
+              this.count2 = response.data;
+            }, error => {
+            }
+        )
+      } catch (error) {
+      }
+      try {
+        const response = await axios.post('http://localhost:8080/movie/search',
+            {keyword: this.formState.search, limit: this.limit2, offset: this.offset2}).then(
+            response => {
+              this.movie_list = response.data;
+            }, error => {
+            }
+        )
       } catch (error) {
       }
     },

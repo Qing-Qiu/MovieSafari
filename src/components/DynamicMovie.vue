@@ -5,7 +5,6 @@
         <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
         <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
           <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"
-               @error="imgError2(this.movie_content)"
                style="display: block;width: auto"
           />
         </a-col>
@@ -55,9 +54,10 @@
           :key="itemIndex"
           class="image-card"
           hoverable
+          @click="watchPersonDetail(item.personID)"
       >
         <div class="card-content" v-if="this.person_list.length">
-          <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer" @error="imgError(item)"/>
+          <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
           <a-card-meta :title="item.name" :description="item.role"/>
         </div>
       </a-card>
@@ -79,6 +79,7 @@
             class="comment-list"
             item-layout="horizontal"
             :data-source="comment_list"
+            :loading="loading"
         >
           <template #renderItem="{ item }">
             <a-list-item>
@@ -95,11 +96,16 @@
       </a-col>
       <a-col :lg="4"></a-col>
     </a-row>
+    <div>
+      <a-pagination show-less-items v-model:current="current2" show-quick-jumper :total="this.count2"
+                    :default-page-size="8" :show-size-changer="false" @change="onChange2"/>
+    </div>
   </HomePage>
 </template>
 
 <script>
 import axios from "axios";
+import router from "@/router/router";
 
 export default {
   data() {
@@ -112,51 +118,50 @@ export default {
       count1: 0,
       limit1: 4,
       offset1: 0,
-      current2: 0,
+      current2: 1,
       count2: 0,
       limit2: 8,
       offset2: 0,
       username: '游客',
+      loading: false,
     }
   },
   beforeMount() {
     this.fetchData();
+    this.fetchData1();
+    this.fetchData2();
   },
   methods: {
-
-    imgError(item) {
-      item.image = require('../assets/meow.jpg')
-    },
-
-    imgError2(item) {
-      item.img = require('../assets/meow.jpg')
-    },
-
     onChange1() {
       this.offset1 = (this.current1 - 1) * 4;
-      this.fetchData();
+      this.fetchData1();
     },
-
+    onChange2() {
+      this.offset2 = (this.current2 - 1) * 8;
+      this.fetchData2();
+    },
+    async watchPersonDetail(id) {
+      await router.push('/person/' + id);
+    },
     async fetchData() {
       try {
         const response = await axios.post('http://localhost:8080/movie/detail',
             {movie: this.movie_id}).then(
             response => {
               this.movie_content = response.data;
-              console.log(response.data);
-              console.log(this.movie_content);
             },
             error => {
             }
         )
       } catch (error) {
       }
+    },
+    async fetchData1() {
       try {
         const response = await axios.post('http://localhost:8080/person/count',
             {id: this.movie_id}).then(
             response => {
               this.count1 = response.data;
-              console.log(this.count1);
             },
             error => {
             }
@@ -168,19 +173,20 @@ export default {
             {id: this.movie_id, limit: this.limit1, offset: this.offset1}).then(
             response => {
               this.person_list = response.data;
-              console.log(this.person_list);
             },
             error => {
             }
         )
       } catch (error) {
       }
+    },
+    async fetchData2() {
+      this.loading = true;
       try {
         const response = await axios.post('http://localhost:8080/comment/count',
             {id: this.movie_id}).then(
             response => {
               this.count2 = response.data;
-              console.log(this.comment_list);
             },
             error => {
             }
@@ -192,13 +198,13 @@ export default {
             {id: this.movie_id, limit: this.limit2, offset: this.offset2}).then(
             response => {
               this.comment_list = response.data;
-              console.log(this.comment_list);
             },
             error => {
             }
         )
       } catch (error) {
       }
+      this.loading = false;
     }
   },
   props: {
@@ -206,9 +212,6 @@ export default {
       type: String,
       required: true
     }
-  },
-  created() {
-    console.log(this.movie_id);
   }
 }
 </script>
@@ -236,35 +239,5 @@ import HomePage from "@/views/HomePage";
 
 img {
   max-width: 100%;
-}
-
-.trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.trigger:hover {
-  color: #1890ff;
-}
-
-.logo {
-  /*height: 32px;*/
-  /*background: rgba(255, 255, 255, 0.3);*/
-  /*margin: 16px;*/
-
-  font-family: cursive; /* 使用一个手写艺术字体 */
-  font-size: 20px;
-  color: #1890ff; /* 设置字体颜色 */
-  text-align: center; /* 文本居中 */
-  padding: 16px; /* 内边距 */
-}
-
-.avatar-container {
-  margin-bottom: -15px;
-  margin-right: 20px;
-  margin-left: auto;
 }
 </style>

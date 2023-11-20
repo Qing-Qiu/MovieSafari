@@ -1,136 +1,78 @@
 <template>
   <HomePage>
-    <template v-if="!detail">
-      <div>
-        <a-radio-group v-model:value="value1" button-style="solid" @change="onChange1()">
-          <a-radio-button value="a">类型</a-radio-button>
-          <a-radio-button value="b">动作</a-radio-button>
-          <a-radio-button value="c">动画</a-radio-button>
-          <a-radio-button value="d">喜剧</a-radio-button>
-          <a-radio-button value="e">犯罪</a-radio-button>
-          <a-radio-button value="f">科幻</a-radio-button>
-          <a-radio-button value="g">历史</a-radio-button>
-          <a-radio-button value="h">音乐</a-radio-button>
-          <a-radio-button value="i">爱情</a-radio-button>
-          <a-radio-button value="j">悬疑</a-radio-button>
-          <a-radio-button value="k">惊悚</a-radio-button>
-          <a-radio-button value="l">其它</a-radio-button>
-        </a-radio-group>
-      </div>
-      <div :style="{ marginTop: '16px' }">
-        <a-radio-group v-model:value="value2" button-style="solid" @change="onChange1()">
-          <a-radio-button value="a">年份</a-radio-button>
-          <a-radio-button value="2015">2015</a-radio-button>
-          <a-radio-button value="2014">2014</a-radio-button>
-          <a-radio-button value="2013">2013</a-radio-button>
-          <a-radio-button value="2012">2012</a-radio-button>
-          <a-radio-button value="2011">2011</a-radio-button>
-          <a-radio-button value="2010">2010</a-radio-button>
-          <a-radio-button value="2009">2009</a-radio-button>
-          <a-radio-button value="2008">2008</a-radio-button>
-          <a-radio-button value="2007">2007</a-radio-button>
-          <a-radio-button value="2006">2006</a-radio-button>
-          <a-radio-button value="l">更久之前</a-radio-button>
-        </a-radio-group>
-      </div>
-      <div :style="{ marginTop: '16px'}">
-        <a-radio-group v-model:value="value3" button-style="solid" @change="onChange1()">
-          <a-radio-button value="a">国家与地区</a-radio-button>
-          <a-radio-button value="b">内地</a-radio-button>
-          <a-radio-button value="c">中国香港</a-radio-button>
-          <a-radio-button value="d">中国台湾</a-radio-button>
-          <a-radio-button value="e">美国</a-radio-button>
-          <a-radio-button value="f">韩国</a-radio-button>
-          <a-radio-button value="g">日本</a-radio-button>
-          <a-radio-button value="h">俄罗斯</a-radio-button>
-          <a-radio-button value="i">印度</a-radio-button>
-          <a-radio-button value="j">泰国</a-radio-button>
-          <a-radio-button value="k">英国</a-radio-button>
-          <a-radio-button value="l">其他国家</a-radio-button>
-        </a-radio-group>
-      </div>
-      <div class="image-grid">
-        <a-card
-            v-for="(item, itemIndex) in movie_list"
-            :key="itemIndex"
-            class="image-card"
-            hoverable
-            @click="watchDetail(item.id)"
-        >
-          <div class="card-content" v-if="this.movie_list.length">
-            <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer" @error="imgError(item)"/>
-            <a-card-meta :title="item.title" :description="item.description"/>
-          </div>
-        </a-card>
-        <div
-            v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
-            :key="itemIndex"
-            class="image-card"
-        >
+    <div>
+      <a-radio-group v-model:value="value1" button-style="solid" @change="onChange1()">
+        <a-radio-button value="a">类型</a-radio-button>
+        <a-radio-button value="b">动作</a-radio-button>
+        <a-radio-button value="c">动画</a-radio-button>
+        <a-radio-button value="d">喜剧</a-radio-button>
+        <a-radio-button value="e">犯罪</a-radio-button>
+        <a-radio-button value="f">科幻</a-radio-button>
+        <a-radio-button value="g">历史</a-radio-button>
+        <a-radio-button value="h">音乐</a-radio-button>
+        <a-radio-button value="i">爱情</a-radio-button>
+        <a-radio-button value="j">悬疑</a-radio-button>
+        <a-radio-button value="k">惊悚</a-radio-button>
+        <a-radio-button value="l">其它</a-radio-button>
+      </a-radio-group>
+    </div>
+    <div :style="{ marginTop: '16px' }">
+      <a-radio-group v-model:value="value2" button-style="solid" @change="onChange1()">
+        <a-radio-button value="a">年份</a-radio-button>
+        <a-radio-button value="2015">2015</a-radio-button>
+        <a-radio-button value="2014">2014</a-radio-button>
+        <a-radio-button value="2013">2013</a-radio-button>
+        <a-radio-button value="2012">2012</a-radio-button>
+        <a-radio-button value="2011">2011</a-radio-button>
+        <a-radio-button value="2010">2010</a-radio-button>
+        <a-radio-button value="2009">2009</a-radio-button>
+        <a-radio-button value="2008">2008</a-radio-button>
+        <a-radio-button value="2007">2007</a-radio-button>
+        <a-radio-button value="2006">2006</a-radio-button>
+        <a-radio-button value="l">更久之前</a-radio-button>
+      </a-radio-group>
+    </div>
+    <div :style="{ marginTop: '16px'}">
+      <a-radio-group v-model:value="value3" button-style="solid" @change="onChange1()">
+        <a-radio-button value="a">国家与地区</a-radio-button>
+        <a-radio-button value="b">内地</a-radio-button>
+        <a-radio-button value="c">中国香港</a-radio-button>
+        <a-radio-button value="d">中国台湾</a-radio-button>
+        <a-radio-button value="e">美国</a-radio-button>
+        <a-radio-button value="f">韩国</a-radio-button>
+        <a-radio-button value="g">日本</a-radio-button>
+        <a-radio-button value="h">俄罗斯</a-radio-button>
+        <a-radio-button value="i">印度</a-radio-button>
+        <a-radio-button value="j">泰国</a-radio-button>
+        <a-radio-button value="k">英国</a-radio-button>
+        <a-radio-button value="l">其他国家</a-radio-button>
+      </a-radio-group>
+    </div>
+    <div class="image-grid">
+      <a-card
+          v-for="(item, itemIndex) in movie_list"
+          :key="itemIndex"
+          class="image-card"
+          hoverable
+          @click="watchMovieDetail(item.id)"
+      >
+        <div class="card-content" v-if="this.movie_list.length">
+          <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
+          <a-card-meta :title="item.title" :description="item.description"/>
         </div>
-      </div>
-      <div>
-        <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count"
-                      :default-page-size="8" :show-size-changer="false" @change="onChange"/>
-      </div>
-    </template>
-    <template v-else>
-      <a-button @click="backward()">
-        <ArrowLeftOutlined/>
-      </a-button>
-      <a-card class="image-card2">
-        <a-row>
-          <a-col :lg="4"></a-col>
-          <a-col :lg="8">
-            <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"
-                 @error="imgError2(this.movie_content)"
-                 style="display: block;width: auto"
-            />
-          </a-col>
-          <a-col :lg="8">
-            <a-typography>
-              <a-typography-title style="text-align: left">{{ this.movie_content.name }}</a-typography-title>
-              <a-typography-paragraph style="text-align: left">
-                <a-typography-text strong>导演：</a-typography-text>
-                {{ this.movie_content.director }}
-              </a-typography-paragraph>
-              <a-typography-paragraph style="text-align: left">
-                <a-typography-text strong>主演：</a-typography-text>
-                {{ this.movie_content.actor }}
-              </a-typography-paragraph>
-              <a-typography-paragraph style="text-align: left">
-                <a-typography-text strong>类型：</a-typography-text>
-                {{ this.movie_content.tag }}
-              </a-typography-paragraph>
-              <a-typography-paragraph style="text-align: left">
-                <a-typography-text strong>评分：</a-typography-text>
-                {{ this.movie_content.rate }}
-              </a-typography-paragraph>
-              <!--              <a-typography-paragraph style="text-align: left">-->
-              <!--                <a-rate v-model:value="this.movie_content.rate" allow-half/>-->
-              <!--              </a-typography-paragraph>-->
-              <a-typography-paragraph style="text-align: left">
-                <a-typography-text strong>评价人数：</a-typography-text>
-                {{ this.movie_content.popular }}
-              </a-typography-paragraph>
-              <a-typography-paragraph style="text-align: left">
-                <a-typography-text strong>年份：</a-typography-text>
-                {{ this.movie_content.year }}
-              </a-typography-paragraph>
-              <a-typography-paragraph style="text-align: left">
-                <a-typography-text strong>制片国家/地区：</a-typography-text>
-                {{ this.movie_content.region }}
-              </a-typography-paragraph>
-              <a-typography-paragraph style="text-align: left">
-                <a-typography-text strong>剧情简介：</a-typography-text>
-                {{ this.movie_content.summary }}
-              </a-typography-paragraph>
-            </a-typography>
-          </a-col>
-          <a-col :lg="4"></a-col>
-        </a-row>
       </a-card>
-    </template>
+      <div
+          v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
+          :key="itemIndex"
+          class="image-card"
+      >
+      </div>
+    </div>
+    <div>
+      <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count"
+                    :default-page-size="8" :show-size-changer="false" @change="onChange"/>
+    </div>
+    <br/><br/>
   </HomePage>
 </template>
 
@@ -139,18 +81,12 @@ import HomePage from "@/views/HomePage";
 </script>
 
 <script>
-import {ref} from 'vue';
 import axios from "axios";
-import {ArrowLeftOutlined} from "@ant-design/icons-vue";
 import router from "@/router/router";
 
 export default {
-  components: {
-    ArrowLeftOutlined,
-  },
   data() {
     return {
-      detail: false,
       value1: 'a',
       value2: 'a',
       value3: 'a',
@@ -302,14 +238,6 @@ export default {
       }
     },
 
-    imgError(item) {
-      item.image = require('../assets/meow.jpg')
-    },
-
-    imgError2(item) {
-      item.img = require('../assets/meow.jpg')
-    },
-
     onChange1() {
       this.current1 = 1;
       this.fetchData();
@@ -325,7 +253,7 @@ export default {
       this.detail = false;
     },
 
-    async watchDetail(id) {
+    async watchMovieDetail(id) {
       await router.push("/movie/" + id);
     }
   }

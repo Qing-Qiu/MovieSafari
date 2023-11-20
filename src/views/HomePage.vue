@@ -76,28 +76,28 @@ export default {
 <script setup>
 import {ref} from 'vue';
 
+const collapsed = ref(false);
 const selectedKeys = ref(['1']);
 const openKeys = ref(['3']);
-const collapsed = ref(false);
 const handleMenuClick = (key) => {
   switch (key) {
     case '1':
-      router.push('/homepage');
+      router.push({path: '/homepage', query: {collapsed: collapsed.value.toString()}});
       break;
     case '2':
-      router.push('/center');
+      router.push({path: '/center', query: {collapsed: collapsed.value.toString()}});
       break;
     case '3-1':
-      router.push('/model');
+      router.push({path: '/model', query: {collapsed: collapsed.value.toString()}});
       break;
     case '3-2':
-      router.push('/chart');
+      router.push({path: '/chart', query: {collapsed: collapsed.value.toString()}});
       break;
     case '4':
-      router.push('/about');
+      router.push({path: '/about', query: {collapsed: collapsed.value.toString()}});
       break;
     case '5':
-      router.push('/prefer');
+      router.push({path: '/prefer', query: {collapsed: collapsed.value.toString()}});
       break;
     case '6':
       sessionStorage.clear();
