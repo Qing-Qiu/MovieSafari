@@ -33,85 +33,100 @@
       </a-col>
       <a-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" :xxl="2"></a-col>
     </a-row>
-    <template v-if="recommendedImages.length && !search">
-      <div class="guess-you-like">
-        <h2>猜你喜欢</h2>
-        <a-button @click="refresh()">换一批</a-button>
-        <div class="image-grid">
-          <a-card
-              v-for="(item, itemIndex) in recommendedImages"
-              :key="itemIndex"
-              class="image-card"
-              hoverable
-              @click="watchMovieDetail(item.id)"
-          >
-            <div class="card-content" v-if="recommendedImages.length">
-              <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
-              <a-card-meta :title="item.title" :description="item.description"/>
-            </div>
-          </a-card>
-        </div>
-      </div>
+    <template v-if="!search">
+      <h2>猜你喜欢</h2>
+      <a-button @click="refresh()">换一批</a-button>
+      <a-row>
+        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+        <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+          <div class="image-grid">
+            <a-card
+                v-for="(item, itemIndex) in recommendedImages"
+                :key="itemIndex"
+                class="image-card"
+                hoverable
+                @click="watchMovieDetail(item.id)"
+            >
+              <div class="card-content" v-if="recommendedImages.length">
+                <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
+                <a-card-meta :title="item.title" :description="item.description"/>
+              </div>
+            </a-card>
+          </div>
+        </a-col>
+        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+      </a-row>
     </template>
     <template v-else-if="search">
       <a-button @click="backward()">
         <ArrowLeftOutlined/>
       </a-button>
-      <div v-if="person_list!==null">
-        共查询到{{ count1 }}位影人。
-
-        <div class="image-grid">
-          <a-card
-              v-for="(item, itemIndex) in person_list"
-              :key="itemIndex"
-              class="image-card"
-              hoverable
-              @click="watchPersonDetail(item.personID)"
-          >
-            <div class="card-content" v-if="this.person_list.length">
-              <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
-              <a-card-meta :title="item.name" :description="item.role"/>
+      <a-row>
+        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+        <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+          <div v-if="person_list!==null">
+            共查询到{{ count1 }}位影人。
+            <div class="image-grid">
+              <a-card
+                  v-for="(item, itemIndex) in person_list"
+                  :key="itemIndex"
+                  class="image-card"
+                  hoverable
+                  @click="watchPersonDetail(item.personID)"
+              >
+                <div class="card-content" v-if="this.person_list.length">
+                  <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
+                  <a-card-meta :title="item.name" :description="item.role"/>
+                </div>
+              </a-card>
+              <div
+                  v-for="(item,itemIndex) in new Array((4 - person_list.length % 4) % 4)"
+                  :key="itemIndex"
+                  class="image-card"
+              >
+              </div>
             </div>
-          </a-card>
-          <div
-              v-for="(item,itemIndex) in new Array((4 - person_list.length % 4) % 4)"
-              :key="itemIndex"
-              class="image-card"
-          >
-          </div>
-        </div>
-        <div v-if="count1!==0">
-          <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
-                        :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
-        </div>
-      </div>
-      <div v-if="movie_list!==null">
-        为您搜索到{{ count2 }}部电影。
-        <div class="image-grid">
-          <a-card
-              v-for="(item, itemIndex) in movie_list"
-              :key="itemIndex"
-              class="image-card"
-              hoverable
-              @click="watchMovieDetail(item.movieID)"
-          >
-            <div class="card-content" v-if="this.movie_list.length">
-              <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
-              <a-card-meta :title="item.name" :description="item.role"/>
+            <div v-if="count1!==0">
+              <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
+                            :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
             </div>
-          </a-card>
-          <div
-              v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
-              :key="itemIndex"
-              class="image-card"
-          >
           </div>
-        </div>
-        <div v-if="count2!==0">
-          <a-pagination show-less-items v-model:current="current2" show-quick-jumper :total="this.count2"
-                        :default-page-size="8" :show-size-changer="false" @change="onChange2"/>
-        </div>
-      </div>
+        </a-col>
+        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+      </a-row>
+      <a-row>
+        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+        <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+          <div v-if="movie_list!==null">
+            为您搜索到{{ count2 }}部电影。
+            <div class="image-grid">
+              <a-card
+                  v-for="(item, itemIndex) in movie_list"
+                  :key="itemIndex"
+                  class="image-card"
+                  hoverable
+                  @click="watchMovieDetail(item.movieID)"
+              >
+                <div class="card-content" v-if="this.movie_list.length">
+                  <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
+                  <a-card-meta :title="item.name" :description="item.role"/>
+                </div>
+              </a-card>
+              <div
+                  v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
+                  :key="itemIndex"
+                  class="image-card"
+              >
+              </div>
+            </div>
+            <div v-if="count2!==0">
+              <a-pagination show-less-items v-model:current="current2" show-quick-jumper :total="this.count2"
+                            :default-page-size="8" :show-size-changer="false" @change="onChange2"/>
+            </div>
+          </div>
+        </a-col>
+        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+      </a-row>
     </template>
   </HomePage>
 </template>
@@ -318,7 +333,7 @@ export default {
 
 .image-card {
   width: 20%; /* Adjust this to control the card width */
-  margin: 20px 25px 20px 30px;
+  margin: 20px 20px 20px 25px;
 }
 
 .card-content {

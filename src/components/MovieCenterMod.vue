@@ -48,30 +48,36 @@
         <a-radio-button value="l">其他国家</a-radio-button>
       </a-radio-group>
     </div>
-    <div class="image-grid">
-      <a-card
-          v-for="(item, itemIndex) in movie_list"
-          :key="itemIndex"
-          class="image-card"
-          hoverable
-          @click="watchMovieDetail(item.id)"
-      >
-        <div class="card-content" v-if="this.movie_list.length">
-          <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
-          <a-card-meta :title="item.title" :description="item.description"/>
+    <a-row>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+      <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+        <div class="image-grid">
+          <a-card
+              v-for="(item, itemIndex) in movie_list"
+              :key="itemIndex"
+              class="image-card"
+              hoverable
+              @click="watchMovieDetail(item.id)"
+          >
+            <div class="card-content" v-if="this.movie_list.length">
+              <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
+              <a-card-meta :title="item.title" :description="item.description"/>
+            </div>
+          </a-card>
+          <div
+              v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
+              :key="itemIndex"
+              class="image-card"
+          >
+          </div>
         </div>
-      </a-card>
-      <div
-          v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
-          :key="itemIndex"
-          class="image-card"
-      >
-      </div>
-    </div>
-    <div>
-      <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count"
-                    :default-page-size="8" :show-size-changer="false" @change="onChange"/>
-    </div>
+        <div>
+          <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count"
+                        :default-page-size="8" :show-size-changer="false" @change="onChange"/>
+        </div>
+      </a-col>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+    </a-row>
     <br/><br/>
   </HomePage>
 </template>
@@ -269,7 +275,7 @@ export default {
 
 .image-card {
   width: 20%; /* Adjust this to control the card width */
-  margin: 20px 25px 20px 30px;
+  margin: 20px 20px 20px 25px;
 }
 
 .image-card2 {

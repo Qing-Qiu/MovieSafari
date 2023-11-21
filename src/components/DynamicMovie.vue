@@ -1,6 +1,6 @@
 <template>
   <HomePage>
-    <a-card class="image-card2">
+    <a-card>
       <a-row>
         <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
         <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
@@ -41,37 +41,44 @@
             </a-typography-paragraph>
             <a-typography-paragraph style="text-align: left">
               <a-typography-text strong>剧情简介：</a-typography-text>
-              {{ this.movie_content.summary }}
+              <a-typography-paragraph :content="this.movie_content.summary"
+                                      :ellipsis="ellipsis ? { rows: 6, expandable: true, symbol: '展开全部' } : false"/>
             </a-typography-paragraph>
           </a-typography>
         </a-col>
         <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
       </a-row>
     </a-card>
-    <div class="image-grid">
-      <a-card
-          v-for="(item, itemIndex) in person_list"
-          :key="itemIndex"
-          class="image-card"
-          hoverable
-          @click="watchPersonDetail(item.personID)"
-      >
-        <div class="card-content" v-if="this.person_list.length">
-          <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
-          <a-card-meta :title="item.name" :description="item.role"/>
+    <a-row>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+      <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+        <div class="image-grid">
+          <a-card
+              v-for="(item, itemIndex) in person_list"
+              :key="itemIndex"
+              class="image-card"
+              hoverable
+              @click="watchPersonDetail(item.personID)"
+          >
+            <div class="card-content" v-if="this.person_list.length">
+              <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
+              <a-card-meta :title="item.name" :description="item.role"/>
+            </div>
+          </a-card>
+          <div
+              v-for="(item,itemIndex) in new Array((4 - person_list.length % 4) % 4)"
+              :key="itemIndex"
+              class="image-card"
+          >
+          </div>
         </div>
-      </a-card>
-      <div
-          v-for="(item,itemIndex) in new Array((4 - person_list.length % 4) % 4)"
-          :key="itemIndex"
-          class="image-card"
-      >
-      </div>
-    </div>
-    <div>
-      <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
-                    :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
-    </div>
+        <div>
+          <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
+                        :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
+        </div>
+      </a-col>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+    </a-row>
     <a-row>
       <a-col :lg="4"></a-col>
       <a-col :lg="16">
@@ -124,6 +131,7 @@ export default {
       offset2: 0,
       username: '游客',
       loading: false,
+      ellipsis: true,
     }
   },
   beforeMount() {
@@ -229,7 +237,7 @@ import HomePage from "@/views/HomePage";
 
 .image-card {
   width: 20%; /* Adjust this to control the card width */
-  margin: 20px 25px 20px 30px;
+  margin: 20px 20px 20px 25px;
 }
 
 .card-content {

@@ -25,37 +25,44 @@
             </a-typography-paragraph>
             <a-typography-paragraph style="text-align: left">
               <a-typography-text strong>简介：</a-typography-text>
-              {{ this.person_content.summary }}
+              <a-typography-paragraph :content=" this.person_content.summary "
+                                      :ellipsis="ellipsis ? { rows: 6, expandable: true, symbol: '展开全部' } : false"/>
             </a-typography-paragraph>
           </a-typography>
         </a-col>
         <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
       </a-row>
     </a-card>
-    <div class="image-grid">
-      <a-card
-          v-for="(item, itemIndex) in movie_list"
-          :key="itemIndex"
-          class="image-card"
-          hoverable
-          @click="watchMovieDetail(item.movieID)"
-      >
-        <div class="card-content" v-if="this.movie_list.length">
-          <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
-          <a-card-meta :title="item.name" :description="item.genre"/>
+    <a-row>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+      <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+        <div class="image-grid">
+          <a-card
+              v-for="(item, itemIndex) in movie_list"
+              :key="itemIndex"
+              class="image-card"
+              hoverable
+              @click="watchMovieDetail(item.movieID)"
+          >
+            <div class="card-content" v-if="this.movie_list.length">
+              <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
+              <a-card-meta :title="item.name" :description="item.genre"/>
+            </div>
+          </a-card>
+          <div
+              v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
+              :key="itemIndex"
+              class="image-card"
+          >
+          </div>
         </div>
-      </a-card>
-      <div
-          v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
-          :key="itemIndex"
-          class="image-card"
-      >
-      </div>
-    </div>
-    <div>
-      <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
-                    :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
-    </div>
+        <div>
+          <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
+                        :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
+        </div>
+      </a-col>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+    </a-row>
   </HomePage>
 </template>
 
@@ -150,6 +157,9 @@ export default {
 </script>
 <script setup>
 import HomePage from "@/views/HomePage";
+import {ref} from "vue";
+
+const ellipsis = ref(true);
 </script>
 
 <style scoped>
@@ -162,7 +172,7 @@ import HomePage from "@/views/HomePage";
 
 .image-card {
   width: 20%; /* Adjust this to control the card width */
-  margin: 20px 25px 20px 30px;
+  margin: 20px 20px 20px 25px;
 }
 
 .card-content {
