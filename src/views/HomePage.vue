@@ -3,7 +3,8 @@
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible style="height: auto; position: fixed">
       <img :src="(collapsed ? require('../assets/logo2.svg') : require('../assets/logo.svg'))"
            style="cursor: pointer; stroke-opacity: 0" alt="movie safari"/>
-      <a-menu v-model:selectedKeys="selectedKeys" :openKeys="openKeys" theme="dark" mode="inline"
+      <a-menu v-model:selectedKeys="$route.meta.selects"
+              :openKeys="openKeys" theme="dark" mode="inline"
               style="height: 100vh;">
         <a-menu-item key="1" @click="handleMenuClick('1')">
           <home-outlined/>
@@ -60,70 +61,73 @@
   </a-layout>
 </template>
 <script>
-export default {
-  data() {
-    return {
-      username: '游客',
-    }
-  },
-  // beforeMount() {
-  //   this.username = sessionStorage.getItem('username');
-  //   //获取当前用户的id和昵称
-  //   console.log(this.username);
-  // }
-}
-</script>
-<script setup>
-import {ref} from 'vue';
-
-const collapsed = ref(false);
-const selectedKeys = ref(['1']);
-const openKeys = ref(['3']);
-const handleMenuClick = (key) => {
-  switch (key) {
-    case '1':
-      router.push({path: '/home'});
-      break;
-    case '2':
-      router.push({path: '/center'});
-      break;
-    case '3-1':
-      router.push({path: '/model'});
-      break;
-    case '3-2':
-      router.push({path: '/chart'});
-      break;
-    case '4':
-      router.push({path: '/about'});
-      break;
-    case '5':
-      router.push({path: '/prefer'});
-      break;
-    case '6':
-      sessionStorage.clear();
-      router.push('/auth/login');
-      break;
-  }
-};
 import {
   PlayCircleOutlined,
-  VideoCameraOutlined,
   SettingOutlined,
   BarChartOutlined,
-  SmileOutlined,
   InfoOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   HomeOutlined
 } from "@ant-design/icons-vue";
-import UserImage from '@/assets/meow.jpg';
-import ModelMod from "@/components/ModelMod";
-import ChartMod from "@/components/ChartMod";
-import AboutMod from "@/components/AboutMod";
-import RecommendSearchMod from "@/components/RecommendSearchMod";
-import MovieCenterMod from "@/components/MovieCenterMod";
 import router from "@/router/router";
-import PreferMod from "@/components/PreferMod";
+
+export default {
+  components: {
+    PlayCircleOutlined,
+    SettingOutlined,
+    BarChartOutlined,
+    InfoOutlined,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined,
+    HomeOutlined
+  },
+  data() {
+    return {
+      username: '游客',
+      collapsed: false,
+      openKeys: ['3'],
+      // selectedKeys: ['1'],
+    }
+  },
+  methods: {
+    handleMenuClick(key) {
+      switch (key) {
+        case '1':
+          router.push({path: '/home'});
+          break;
+        case '2':
+          router.push({path: '/center'});
+          break;
+        case '3-1':
+          router.push({path: '/model'});
+          break;
+        case '3-2':
+          router.push({path: '/chart'});
+          break;
+        case '4':
+          router.push({path: '/about'});
+          break;
+        case '5':
+          router.push({path: '/prefer'});
+          break;
+        case '6':
+          sessionStorage.clear();
+          router.push('/auth/login');
+          break;
+      }
+    },
+    // beforeMount() {
+    //   this.username = sessionStorage.getItem('username');
+    //   //获取当前用户的id和昵称
+    //   console.log(this.username);
+    // }
+  }
+}
+</script>
+
+<script setup>
+import UserImage from '@/assets/meow.jpg';
 </script>
 
 <style scoped>

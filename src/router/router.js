@@ -36,6 +36,7 @@ const routes = [
         component: () => import('../components/RecommendSearchMod'),
         meta: {
             dependent: false,
+            selects: ['1'],
         }
     },
     {
@@ -44,6 +45,7 @@ const routes = [
         component: AboutMod,
         meta: {
             dependent: false,
+            selects: ['4'],
         }
     },
     {
@@ -51,6 +53,7 @@ const routes = [
         component: MovieCenterMod,
         meta: {
             dependent: false,
+            selects: ['2'],
         }
     },
     {
@@ -58,6 +61,7 @@ const routes = [
         component: ModelMod,
         meta: {
             dependent: false,
+            selects: ['3-1'],
         }
     },
     {
@@ -65,6 +69,7 @@ const routes = [
         component: ChartMod,
         meta: {
             dependent: false,
+            selects: ['3-2'],
         }
     },
     {
@@ -81,6 +86,7 @@ const routes = [
         props: true,
         meta: {
             dependent: false,
+            selects: ['1'],
         }
     },
     {
@@ -90,6 +96,7 @@ const routes = [
         props: true,
         meta: {
             dependent: false,
+            selects: ['1'],
         }
     },
 ];
