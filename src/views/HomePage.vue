@@ -82,22 +82,22 @@ const openKeys = ref(['3']);
 const handleMenuClick = (key) => {
   switch (key) {
     case '1':
-      router.push({path: '/homepage', query: {collapsed: collapsed.value.toString()}});
+      router.push({path: '/home'});
       break;
     case '2':
-      router.push({path: '/center', query: {collapsed: collapsed.value.toString()}});
+      router.push({path: '/center'});
       break;
     case '3-1':
-      router.push({path: '/model', query: {collapsed: collapsed.value.toString()}});
+      router.push({path: '/model'});
       break;
     case '3-2':
-      router.push({path: '/chart', query: {collapsed: collapsed.value.toString()}});
+      router.push({path: '/chart'});
       break;
     case '4':
-      router.push({path: '/about', query: {collapsed: collapsed.value.toString()}});
+      router.push({path: '/about'});
       break;
     case '5':
-      router.push({path: '/prefer', query: {collapsed: collapsed.value.toString()}});
+      router.push({path: '/prefer'});
       break;
     case '6':
       sessionStorage.clear();

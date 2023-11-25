@@ -1,148 +1,144 @@
 <template>
-  <HomePage>
-    <a-row>
-      <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8"></a-col>
-      <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" :xxl="12">
-        <a-form
-            :model="formState"
-            name="basic"
-            :label-col="{ span: 8 }"
-            :wrapper-col="{ span: 16 }"
-            autocomplete="off"
-            class="login-form"
-            @submit="submitForm"
+  <a-row>
+    <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8"></a-col>
+    <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" :xxl="12">
+      <a-form
+          :model="formState"
+          name="basic"
+          :label-col="{ span: 8 }"
+          :wrapper-col="{ span: 16 }"
+          autocomplete="off"
+          class="login-form"
+          @submit="submitForm"
+      >
+        <a-form-item
+            label=""
+            name="search"
+            :rules="[]"
         >
-          <a-form-item
-              label=""
-              name="search"
-              :rules="[]"
+          <a-input-search
+              v-model:value="formState.search"
+              placeholder="请输入搜索内容"
+              size="large"
+              @search="submitForm"
+          />
+          <!--        <a-radio-group v-model:value="val123">-->
+          <!--          <a-radio :value="1">根据内容搜索</a-radio>-->
+          <!--          <a-radio :value="2">根据影片名搜索</a-radio>-->
+          <!--          <a-radio :value="3">根据人名搜索</a-radio>-->
+          <!--        </a-radio-group>-->
+        </a-form-item>
+      </a-form>
+    </a-col>
+    <a-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" :xxl="2"></a-col>
+  </a-row>
+  <template v-if="!search">
+    <h2>猜你喜欢</h2>
+    <a-button @click="refresh()">换一批</a-button>
+    <a-row>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+      <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+        <div class="image-grid">
+          <a-card
+              v-for="(item, itemIndex) in recommendedImages"
+              :key="itemIndex"
+              class="image-card"
+              hoverable
+              @click="watchMovieDetail(item.id)"
           >
-            <a-input-search
-                v-model:value="formState.search"
-                placeholder="请输入搜索内容"
-                size="large"
-                @search="submitForm"
-            />
-            <!--        <a-radio-group v-model:value="val123">-->
-            <!--          <a-radio :value="1">根据内容搜索</a-radio>-->
-            <!--          <a-radio :value="2">根据影片名搜索</a-radio>-->
-            <!--          <a-radio :value="3">根据人名搜索</a-radio>-->
-            <!--        </a-radio-group>-->
-          </a-form-item>
-        </a-form>
+            <div class="card-content" v-if="recommendedImages.length">
+              <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
+              <a-card-meta :title="item.title" :description="item.description"/>
+            </div>
+          </a-card>
+        </div>
       </a-col>
-      <a-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" :xxl="2"></a-col>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
     </a-row>
-    <template v-if="!search">
-      <h2>猜你喜欢</h2>
-      <a-button @click="refresh()">换一批</a-button>
-      <a-row>
-        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-        <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+  </template>
+  <template v-else-if="search">
+    <a-button @click="backward()">
+      <ArrowLeftOutlined/>
+    </a-button>
+    <a-row>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+      <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+        <div v-if="person_list!==null">
+          共查询到{{ count1 }}位影人。
           <div class="image-grid">
             <a-card
-                v-for="(item, itemIndex) in recommendedImages"
+                v-for="(item, itemIndex) in person_list"
                 :key="itemIndex"
                 class="image-card"
                 hoverable
-                @click="watchMovieDetail(item.id)"
+                @click="watchPersonDetail(item.personID)"
             >
-              <div class="card-content" v-if="recommendedImages.length">
-                <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
-                <a-card-meta :title="item.title" :description="item.description"/>
+              <div class="card-content" v-if="this.person_list.length">
+                <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
+                <a-card-meta :title="item.name" :description="item.role"/>
               </div>
             </a-card>
+            <div
+                v-for="(item,itemIndex) in new Array((4 - person_list.length % 4) % 4)"
+                :key="itemIndex"
+                class="image-card"
+            >
+            </div>
           </div>
-        </a-col>
-        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-      </a-row>
-    </template>
-    <template v-else-if="search">
-      <a-button @click="backward()">
-        <ArrowLeftOutlined/>
-      </a-button>
-      <a-row>
-        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-        <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
-          <div v-if="person_list!==null">
-            共查询到{{ count1 }}位影人。
-            <div class="image-grid">
-              <a-card
-                  v-for="(item, itemIndex) in person_list"
-                  :key="itemIndex"
-                  class="image-card"
-                  hoverable
-                  @click="watchPersonDetail(item.personID)"
-              >
-                <div class="card-content" v-if="this.person_list.length">
-                  <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
-                  <a-card-meta :title="item.name" :description="item.role"/>
-                </div>
-              </a-card>
-              <div
-                  v-for="(item,itemIndex) in new Array((4 - person_list.length % 4) % 4)"
-                  :key="itemIndex"
-                  class="image-card"
-              >
+          <div v-if="count1!==0">
+            <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
+                          :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
+          </div>
+        </div>
+      </a-col>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+    </a-row>
+    <a-row>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+      <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+        <div v-if="movie_list!==null">
+          为您搜索到{{ count2 }}部电影。
+          <div class="image-grid">
+            <a-card
+                v-for="(item, itemIndex) in movie_list"
+                :key="itemIndex"
+                class="image-card"
+                hoverable
+                @click="watchMovieDetail(item.movieID)"
+            >
+              <div class="card-content" v-if="this.movie_list.length">
+                <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
+                <a-card-meta :title="item.name" :description="item.role"/>
               </div>
-            </div>
-            <div v-if="count1!==0">
-              <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
-                            :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
-            </div>
-          </div>
-        </a-col>
-        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-      </a-row>
-      <a-row>
-        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-        <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
-          <div v-if="movie_list!==null">
-            为您搜索到{{ count2 }}部电影。
-            <div class="image-grid">
-              <a-card
-                  v-for="(item, itemIndex) in movie_list"
-                  :key="itemIndex"
-                  class="image-card"
-                  hoverable
-                  @click="watchMovieDetail(item.movieID)"
-              >
-                <div class="card-content" v-if="this.movie_list.length">
-                  <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
-                  <a-card-meta :title="item.name" :description="item.role"/>
-                </div>
-              </a-card>
-              <div
-                  v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
-                  :key="itemIndex"
-                  class="image-card"
-              >
-              </div>
-            </div>
-            <div v-if="count2!==0">
-              <a-pagination show-less-items v-model:current="current2" show-quick-jumper :total="this.count2"
-                            :default-page-size="8" :show-size-changer="false" @change="onChange2"/>
+            </a-card>
+            <div
+                v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
+                :key="itemIndex"
+                class="image-card"
+            >
             </div>
           </div>
-        </a-col>
-        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-      </a-row>
-    </template>
-  </HomePage>
+          <div v-if="count2!==0">
+            <a-pagination show-less-items v-model:current="current2" show-quick-jumper :total="this.count2"
+                          :default-page-size="8" :show-size-changer="false" @change="onChange2"/>
+          </div>
+        </div>
+      </a-col>
+      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+    </a-row>
+  </template>
 </template>
 
 <script setup>
 import HomePage from "@/views/HomePage";
+import {ArrowLeftOutlined} from "@ant-design/icons-vue";
 </script>
+
 <script>
 import axios from "axios";
-import {ArrowLeftOutlined} from "@ant-design/icons-vue";
 import router from "@/router/router";
 
 export default {
-  components: {
-    ArrowLeftOutlined
-  },
   data() {
     return {
       formState: {

@@ -1,69 +1,67 @@
 <template>
-  <HomePage>
-    <a-card class="image-card2">
-      <a-row>
-        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-        <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
-          <img :src="this.person_content.img" :alt="this.person_content.name" referrerpolicy="no-referrer"
-               style="display: block;width: auto"
-          />
-        </a-col>
-        <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
-          <a-typography>
-            <a-typography-title style="text-align: left">{{ this.person_content.name }}</a-typography-title>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>性别：</a-typography-text>
-              {{ this.person_content.sex }}
-            </a-typography-paragraph>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>生日：</a-typography-text>
-              {{ this.person_content.birthday }}
-            </a-typography-paragraph>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>出生地：</a-typography-text>
-              {{ this.person_content.birthplace }}
-            </a-typography-paragraph>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>简介：</a-typography-text>
-              <a-typography-paragraph :content=" this.person_content.summary "
-                                      :ellipsis="ellipsis ? { rows: 6, expandable: true, symbol: '展开全部' } : false"/>
-            </a-typography-paragraph>
-          </a-typography>
-        </a-col>
-        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-      </a-row>
-    </a-card>
+  <a-card class="image-card2">
     <a-row>
       <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-      <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
-        <div class="image-grid">
-          <a-card
-              v-for="(item, itemIndex) in movie_list"
-              :key="itemIndex"
-              class="image-card"
-              hoverable
-              @click="watchMovieDetail(item.movieID)"
-          >
-            <div class="card-content" v-if="this.movie_list.length">
-              <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
-              <a-card-meta :title="item.name" :description="item.genre"/>
-            </div>
-          </a-card>
-          <div
-              v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
-              :key="itemIndex"
-              class="image-card"
-          >
-          </div>
-        </div>
-        <div>
-          <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
-                        :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
-        </div>
+      <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
+        <img :src="this.person_content.img" :alt="this.person_content.name" referrerpolicy="no-referrer"
+             style="display: block;width: auto"
+        />
+      </a-col>
+      <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
+        <a-typography>
+          <a-typography-title style="text-align: left">{{ this.person_content.name }}</a-typography-title>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>性别：</a-typography-text>
+            {{ this.person_content.sex }}
+          </a-typography-paragraph>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>生日：</a-typography-text>
+            {{ this.person_content.birthday }}
+          </a-typography-paragraph>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>出生地：</a-typography-text>
+            {{ this.person_content.birthplace }}
+          </a-typography-paragraph>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>简介：</a-typography-text>
+            <a-typography-paragraph :content=" this.person_content.summary "
+                                    :ellipsis="ellipsis ? { rows: 6, expandable: true, symbol: '展开全部' } : false"/>
+          </a-typography-paragraph>
+        </a-typography>
       </a-col>
       <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
     </a-row>
-  </HomePage>
+  </a-card>
+  <a-row>
+    <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+    <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+      <div class="image-grid">
+        <a-card
+            v-for="(item, itemIndex) in movie_list"
+            :key="itemIndex"
+            class="image-card"
+            hoverable
+            @click="watchMovieDetail(item.movieID)"
+        >
+          <div class="card-content" v-if="this.movie_list.length">
+            <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
+            <a-card-meta :title="item.name" :description="item.genre"/>
+          </div>
+        </a-card>
+        <div
+            v-for="(item,itemIndex) in new Array((4 - movie_list.length % 4) % 4)"
+            :key="itemIndex"
+            class="image-card"
+        >
+        </div>
+      </div>
+      <div>
+        <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
+                      :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
+      </div>
+    </a-col>
+    <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+  </a-row>
 </template>
 
 <script>

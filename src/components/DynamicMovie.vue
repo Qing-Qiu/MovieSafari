@@ -1,113 +1,111 @@
 <template>
-  <HomePage>
-    <a-card>
-      <a-row>
-        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-        <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
-          <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"
-               style="display: block;width: auto"
-          />
-        </a-col>
-        <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
-          <a-typography>
-            <a-typography-title style="text-align: left">{{ this.movie_content.name }}</a-typography-title>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>导演：</a-typography-text>
-              {{ this.movie_content.director }}
-            </a-typography-paragraph>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>主演：</a-typography-text>
-              {{ this.movie_content.actor }}
-            </a-typography-paragraph>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>类型：</a-typography-text>
-              {{ this.movie_content.tag }}
-            </a-typography-paragraph>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>评分：</a-typography-text>
-              {{ this.movie_content.rate }}
-            </a-typography-paragraph>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>评价人数：</a-typography-text>
-              {{ this.movie_content.popular }}
-            </a-typography-paragraph>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>年份：</a-typography-text>
-              {{ this.movie_content.year }}
-            </a-typography-paragraph>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>制片国家/地区：</a-typography-text>
-              {{ this.movie_content.region }}
-            </a-typography-paragraph>
-            <a-typography-paragraph style="text-align: left">
-              <a-typography-text strong>剧情简介：</a-typography-text>
-              <a-typography-paragraph :content="this.movie_content.summary"
-                                      :ellipsis="ellipsis ? { rows: 6, expandable: true, symbol: '展开全部' } : false"/>
-            </a-typography-paragraph>
-          </a-typography>
-        </a-col>
-        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-      </a-row>
-    </a-card>
+  <a-card>
     <a-row>
       <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-      <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
-        <div class="image-grid">
-          <a-card
-              v-for="(item, itemIndex) in person_list"
-              :key="itemIndex"
-              class="image-card"
-              hoverable
-              @click="watchPersonDetail(item.personID)"
-          >
-            <div class="card-content" v-if="this.person_list.length">
-              <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
-              <a-card-meta :title="item.name" :description="item.role"/>
-            </div>
-          </a-card>
-          <div
-              v-for="(item,itemIndex) in new Array((4 - person_list.length % 4) % 4)"
-              :key="itemIndex"
-              class="image-card"
-          >
-          </div>
-        </div>
-        <div>
-          <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
-                        :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
-        </div>
+      <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
+        <img :src="this.movie_content.img" :alt="this.movie_content.name" referrerpolicy="no-referrer"
+             style="display: block;width: auto"
+        />
+      </a-col>
+      <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
+        <a-typography>
+          <a-typography-title style="text-align: left">{{ this.movie_content.name }}</a-typography-title>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>导演：</a-typography-text>
+            {{ this.movie_content.director }}
+          </a-typography-paragraph>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>主演：</a-typography-text>
+            {{ this.movie_content.actor }}
+          </a-typography-paragraph>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>类型：</a-typography-text>
+            {{ this.movie_content.tag }}
+          </a-typography-paragraph>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>评分：</a-typography-text>
+            {{ this.movie_content.rate }}
+          </a-typography-paragraph>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>评价人数：</a-typography-text>
+            {{ this.movie_content.popular }}
+          </a-typography-paragraph>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>年份：</a-typography-text>
+            {{ this.movie_content.year }}
+          </a-typography-paragraph>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>制片国家/地区：</a-typography-text>
+            {{ this.movie_content.region }}
+          </a-typography-paragraph>
+          <a-typography-paragraph style="text-align: left">
+            <a-typography-text strong>剧情简介：</a-typography-text>
+            <a-typography-paragraph :content="this.movie_content.summary"
+                                    :ellipsis="ellipsis ? { rows: 6, expandable: true, symbol: '展开全部' } : false"/>
+          </a-typography-paragraph>
+        </a-typography>
       </a-col>
       <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
     </a-row>
-    <a-row>
-      <a-col :lg="4"></a-col>
-      <a-col :lg="16">
-        <a-list
-            class="comment-list"
-            item-layout="horizontal"
-            :data-source="comment_list"
-            :loading="loading"
+  </a-card>
+  <a-row>
+    <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+    <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+      <div class="image-grid">
+        <a-card
+            v-for="(item, itemIndex) in person_list"
+            :key="itemIndex"
+            class="image-card"
+            hoverable
+            @click="watchPersonDetail(item.personID)"
         >
-          <template #renderItem="{ item }">
-            <a-list-item>
-              <a-comment :author="item.nickname" :avatar="item.avatar">
-                <template #content>
-                  <a-typography-paragraph style="text-align: left">
-                    {{ item.comment }}
-                  </a-typography-paragraph>
-                </template>
-              </a-comment>
-            </a-list-item>
-          </template>
-        </a-list>
-      </a-col>
-      <a-col :lg="4"></a-col>
-    </a-row>
-    <div>
-      <a-pagination show-less-items v-model:current="current2" show-quick-jumper :total="this.count2"
-                    :default-page-size="8" :show-size-changer="false" @change="onChange2"/>
-    </div>
-  </HomePage>
+          <div class="card-content" v-if="this.person_list.length">
+            <img :src="item.img" :alt="item.name" referrerpolicy="no-referrer"/>
+            <a-card-meta :title="item.name" :description="item.role"/>
+          </div>
+        </a-card>
+        <div
+            v-for="(item,itemIndex) in new Array((4 - person_list.length % 4) % 4)"
+            :key="itemIndex"
+            class="image-card"
+        >
+        </div>
+      </div>
+      <div>
+        <a-pagination show-less-items v-model:current="current1" show-quick-jumper :total="this.count1"
+                      :default-page-size="4" :show-size-changer="false" @change="onChange1"/>
+      </div>
+    </a-col>
+    <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+  </a-row>
+  <a-row>
+    <a-col :lg="4"></a-col>
+    <a-col :lg="16">
+      <a-list
+          class="comment-list"
+          item-layout="horizontal"
+          :data-source="comment_list"
+          :loading="loading"
+      >
+        <template #renderItem="{ item }">
+          <a-list-item>
+            <a-comment :author="item.nickname" :avatar="item.avatar">
+              <template #content>
+                <a-typography-paragraph style="text-align: left">
+                  {{ item.comment }}
+                </a-typography-paragraph>
+              </template>
+            </a-comment>
+          </a-list-item>
+        </template>
+      </a-list>
+    </a-col>
+    <a-col :lg="4"></a-col>
+  </a-row>
+  <div>
+    <a-pagination show-less-items v-model:current="current2" show-quick-jumper :total="this.count2"
+                  :default-page-size="8" :show-size-changer="false" @change="onChange2"/>
+  </div>
 </template>
 
 <script>

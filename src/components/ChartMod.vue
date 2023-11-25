@@ -1,9 +1,7 @@
 <template>
-  <HomePage>
-    <div id="ttt" style="width: 1500px;height: 500px">
-      Hello vue!
-    </div>
-  </HomePage>
+  <div id="ttt" style="width: 1500px;height: 500px">
+    Hello vue!
+  </div>
 </template>
 <script setup>
 import HomePage from "@/views/HomePage";
@@ -27,7 +25,6 @@ for (let i = 0; i < 20; i++) {
   lineData.push(d + b);
 }
 export default {
-  components: {HomePage},
   data() {
     return {
       chart: null,

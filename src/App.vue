@@ -1,11 +1,17 @@
 <template>
-  <router-view/>
+  <router-view v-if="$route.meta.dependent"/>
+  <HomePage>
+    <router-view/>
+  </HomePage>
 </template>
 <script>
+
+import HomePage from "@/views/HomePage";
 
 export default {
   name: 'App',
   components: {
+    HomePage,
   }
 }
 </script>

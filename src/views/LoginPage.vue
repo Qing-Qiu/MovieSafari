@@ -84,7 +84,7 @@ const submitForm = async () => {
       nickname = response.data[1];
       sessionStorage.setItem('username', formState.username);
       sessionStorage.setItem('nickname', nickname);
-      await router.push('/homepage');
+      await router.push('/home');
     } else {
 
     }
@@ -99,7 +99,7 @@ const register = () => {
 
 const tourist = () => {
   sessionStorage.setItem('username', '游客');
-  router.push('/homepage');
+  router.push('/home');
 }
 
 </script>
