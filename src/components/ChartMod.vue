@@ -1,6 +1,5 @@
 <template>
-  <div id="ttt" style="width: 1500px;height: 500px">
-    Hello vue!
+  <div id="graph">
   </div>
 </template>
 <script setup>
@@ -8,40 +7,52 @@ import HomePage from "@/views/HomePage";
 </script>
 <script>
 import * as echarts from 'echarts';
-// prettier-ignore
-// Generate data
-let category = [];
-let dottedBase = +new Date();
-let lineData = [];
-let barData = [];
-for (let i = 0; i < 20; i++) {
-  let date = new Date((dottedBase += 3600 * 24 * 1000));
-  category.push(
-      [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-')
-  );
-  let b = Math.random() * 200;
-  let d = Math.random() * 200;
-  barData.push(b);
-  lineData.push(d + b);
-}
+import axios from "axios";
+// for (let i = 0; i < 20; i++) {
+//   let date = new Date((dottedBase += 3600 * 24 * 1000));
+//   category.push(
+//       [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('-')
+//   );
+//   let b = 200;
+//   let d = 200;
+//   barData.push(b);
+//   lineData.push(d + b);
+// }
 export default {
   data() {
     return {
+      category: [],
+      lineData: [],
+      barData: [],
       chart: null,
       option: Object,
-      count: 11
     }
   },
-  methods: {},
+  methods: {
+    async fuck() {
+      try {
+        const response = await axios.post('http://localhost:8080/chart/chart1',
+            {}).then(response => {
+          let len = response.data.length;
+          for (let i = 0; i < len; i++) {
+            this.category.push(response.data[i].year);
+            this.barData.push(parseInt(response.data[i].popular));
+            this.lineData.push(parseInt(response.data[i].popular));
+          }
+        }, error => {
+        })
+      } catch (error) {
+      }
+    }
+  },
   created() {   /*配置项目设定*/
-  }, mounted() {
-    /*初始化Echarts*/
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('ttt'));
-// 绘制图表
-    // Enable data zoom when user click bar.
+  },
+  async mounted() {
+    var myChart = echarts.init(document.getElementById('graph'));
     const zoomSize = 6;
-
+    await this.fuck();
+    console.log(this.category);
+    console.log(this.barData);
     myChart.setOption({
       backgroundColor: '#0f375f',
       tooltip: {
@@ -57,7 +68,7 @@ export default {
         }
       },
       xAxis: {
-        data: category,
+        data: this.category,
         axisLine: {
           lineStyle: {
             color: '#ccc'
@@ -80,7 +91,7 @@ export default {
           showAllSymbol: true,
           symbol: 'emptyCircle',
           symbolSize: 15,
-          data: lineData
+          data: this.lineData
         },
         {
           name: 'bar',
@@ -93,7 +104,7 @@ export default {
               {offset: 1, color: '#43eec6'}
             ])
           },
-          data: barData
+          data: this.barData
         },
         {
           name: 'line',
@@ -108,7 +119,7 @@ export default {
             ])
           },
           z: -12,
-          data: lineData
+          data: this.lineData
         },
         {
           name: 'dotted',
@@ -121,10 +132,9 @@ export default {
           symbolSize: [12, 4],
           symbolMargin: 1,
           z: -10,
-          data: lineData
+          data: this.lineData
         }
       ]
-      /*The		End*/
     });
   },
 }
@@ -132,6 +142,13 @@ export default {
 <style scoped>
 </style>
 <style>
+#graph {
+  width: 1200px;
+  height: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .demo-table-expand {
   font-size: 0;
 }
