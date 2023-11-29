@@ -98,7 +98,6 @@ const register = () => {
 }
 
 const tourist = () => {
-  sessionStorage.setItem('username', '游客');
   router.push('/home');
 }
 

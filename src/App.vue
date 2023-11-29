@@ -1,6 +1,6 @@
 <template>
   <router-view v-if="$route.meta.dependent"/>
-  <HomePage>
+  <HomePage v-if="!$route.meta.dependent">
     <router-view/>
   </HomePage>
 </template>

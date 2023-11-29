@@ -79,8 +79,27 @@
     <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
   </a-row>
   <a-row>
-    <a-col :lg="4"></a-col>
-    <a-col :lg="16">
+    <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+    <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+      <a-comment>
+        <template #avatar>
+          <a-avatar :src="UserImage"/>
+        </template>
+        <template #content>
+          <a-form-item>
+            <a-textarea v-model:value="new_comment" :rows="4"/>
+          </a-form-item>
+          <a-form-item v-if="disable()">
+            <a-button html-type="submit" :loading="submitting"
+                      @click="submitComment">
+              添加评论
+            </a-button>
+          </a-form-item>
+          <a-form-item v-if="!disable()">
+            <a-button disabled>登录以发表评论</a-button>
+          </a-form-item>
+        </template>
+      </a-comment>
       <a-list
           class="comment-list"
           item-layout="horizontal"
@@ -100,7 +119,7 @@
         </template>
       </a-list>
     </a-col>
-    <a-col :lg="4"></a-col>
+    <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
   </a-row>
   <div>
     <a-pagination show-less-items v-model:current="current2" show-quick-jumper :total="this.count2"
@@ -130,6 +149,8 @@ export default {
       username: '游客',
       loading: false,
       ellipsis: true,
+      new_comment: '',
+      submitting: false,
     }
   },
   beforeMount() {
@@ -211,6 +232,33 @@ export default {
       } catch (error) {
       }
       this.loading = false;
+    },
+
+    async submitComment() {
+      this.submitting = true;
+      try {
+        const response = await axios.post('http://localhost:8080/comment/append',
+            {
+              userID: sessionStorage.getItem('username'),
+              nickname: sessionStorage.getItem('nickname'),
+              comment: this.new_comment,
+              movieID: this.movie_id,
+            }).then(
+            response => {
+
+            },
+            error => {
+            }
+        )
+      } catch (error) {
+      }
+      this.submitting = false;
+      await this.fetchData2();
+    },
+
+    disable() {
+      return !(sessionStorage.getItem('nickname') === null
+          || sessionStorage.getItem('username') === null);
     }
   },
   props: {
@@ -223,6 +271,7 @@ export default {
 </script>
 <script setup>
 import HomePage from "@/views/HomePage";
+import UserImage from '@/assets/meow.jpg';
 </script>
 
 <style scoped>

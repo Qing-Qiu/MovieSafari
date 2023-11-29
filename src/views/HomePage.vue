@@ -38,6 +38,11 @@
             @click="() => (collapsed = !collapsed)"
         />
         <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)"/>
+        <a-typography-text
+            style="margin-left: auto;
+                  margin-right: 10px;
+                  margin-bottom: -15px;">{{ nickname }}
+        </a-typography-text>
         <a-dropdown class="avatar-container">
           <a-avatar :src="UserImage" :size="50" style="cursor: pointer;"/>
           <template #overlay>
@@ -84,7 +89,8 @@ export default {
   },
   data() {
     return {
-      username: '游客',
+      username: '',
+      nickname: '',
       collapsed: false,
       openKeys: ['3'],
       // selectedKeys: ['1'],
@@ -113,15 +119,23 @@ export default {
           break;
         case '6':
           sessionStorage.clear();
+          this.username = '';
+          this.nickname = '';
           router.push('/auth/login');
           break;
       }
-    },
-    // beforeMount() {
-    //   this.username = sessionStorage.getItem('username');
-    //   //获取当前用户的id和昵称
-    //   console.log(this.username);
-    // }
+    }
+  },
+  mounted() {
+    this.username = sessionStorage.getItem('username');
+    this.nickname = sessionStorage.getItem('nickname');
+    if (this.nickname === null || this.username === null) {
+      this.nickname = "游客";
+      this.username = "游客";
+    }
+    //获取当前用户的id和昵称
+    console.log(this.username);
+    console.log(this.nickname);
   }
 }
 </script>
@@ -158,6 +172,6 @@ import UserImage from '@/assets/meow.jpg';
 .avatar-container {
   margin-bottom: -15px;
   margin-right: 20px;
-  margin-left: auto;
+  /*margin-left: auto;*/
 }
 </style>
