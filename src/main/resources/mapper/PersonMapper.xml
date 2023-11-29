@@ -49,7 +49,7 @@
         FROM movie, relationship
         WHERE relationship.movie_id = movie.movieID
         AND relationship.person_id = #{id}
-        ORDER BY popular DESC
+        ORDER BY CAST(popular AS SIGNED) DESC
         LIMIT ${limit} OFFSET ${offset};
     </select>
     <select id="countMovieByPerson" resultType="int">
@@ -57,7 +57,7 @@
         FROM movie, relationship
         WHERE relationship.movie_id = movie.movieID
         AND relationship.person_id = #{id}
-        ORDER BY popular DESC;
+        ORDER BY CAST(popular AS SIGNED) DESC;
     </select>
     <select id="findPersonByKeywords" resultType="com.example.douban.pojo.Person">
         SELECT personID, name, img, sex, birthday, birthplace, summary

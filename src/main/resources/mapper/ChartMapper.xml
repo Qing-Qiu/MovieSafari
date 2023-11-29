@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.douban.mapper.ChartMapper">
+    <select id="getMovieYears" resultType="string">
+        SELECT DISTINCT year
+        FROM movie
+        ORDER BY year;
+    </select>
+    <select id="getMostPopularMovie" resultType="com.example.douban.pojo.Movie">
+        SELECT name, movieID, popular, year
+        FROM movie
+        WHERE year = #{year}
+        ORDER BY CAST(popular AS SIGNED) DESC LIMIT 1;
+    </select>
+</mapper>
