@@ -13,4 +13,7 @@ public interface CommentMapper {
     ArrayList<Comment> findCommentByMovie(@Param("id") String id, @Param("limit") String limit, @Param("offset") String offset);
 
     Integer countCommentByMovie(@Param("id") String id);
+
+    Integer appendComment(@Param("userID") String userID, @Param("nickname") String nickname,
+                          @Param("comment") String comment, @Param("movieID") String movieID);
 }

@@ -28,11 +28,22 @@ public class CommentController {
         return ResponseEntity.ok(null);
     }
 
-
     @PostMapping("/count")
     public ResponseEntity<Integer> handleCountPage(@RequestBody Map<String, String> commentData) {
         try {
             Integer cnt = commentService.countCommentByMovie(commentData.get("id"));
+            return ResponseEntity.ok(cnt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/append")
+    public ResponseEntity<Integer> handleAppendPage(@RequestBody Map<String, String> commentData) {
+        try {
+            Integer cnt = commentService.appendComment(commentData.get("userID"), commentData.get("nickname"),
+                    commentData.get("comment"), commentData.get("movieID"));
             return ResponseEntity.ok(cnt);
         } catch (Exception e) {
             e.printStackTrace();

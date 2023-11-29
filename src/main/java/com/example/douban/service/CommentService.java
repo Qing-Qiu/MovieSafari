@@ -23,4 +23,8 @@ public class CommentService {
     public Integer countCommentByMovie(String id) {
         return commentMapper.countCommentByMovie(id);
     }
+
+    public Integer appendComment(String userID, String nickname, String comment, String movieID) {
+        return commentMapper.appendComment(userID, nickname, comment, movieID);
+    }
 }
