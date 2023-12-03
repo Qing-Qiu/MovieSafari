@@ -8,7 +8,6 @@
           :label-col="{ span: 8 }"
           :wrapper-col="{ span: 16 }"
           autocomplete="off"
-          class="login-form"
           @submit="submitForm"
       >
         <a-form-item
@@ -22,15 +21,10 @@
               size="large"
               @search="submitForm"
           />
-          <!--        <a-radio-group v-model:value="val123">-->
-          <!--          <a-radio :value="1">根据内容搜索</a-radio>-->
-          <!--          <a-radio :value="2">根据影片名搜索</a-radio>-->
-          <!--          <a-radio :value="3">根据人名搜索</a-radio>-->
-          <!--        </a-radio-group>-->
         </a-form-item>
       </a-form>
     </a-col>
-    <a-col :xs="2" :sm="2" :md="2" :lg="2" :xl="2" :xxl="2"></a-col>
+    <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
   </a-row>
   <template v-if="!search">
     <h2>猜你喜欢</h2>
