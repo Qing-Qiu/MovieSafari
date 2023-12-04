@@ -3,6 +3,15 @@
     <div id="graph">
     </div>
   </a-list>
+  <a-segmented v-model:value="value" :options="data" @click="onChange()">
+  </a-segmented>
+  <br/>
+  <a-segmented v-if="value==='历年各种类型电影数量'" v-model:value="value2"
+               :options="type" @click="onChange()">
+  </a-segmented>
+  <a-segmented v-if="value==='电影类型数量世界地图'" v-model:value="value3"
+               :options="type" @click="onChange()">
+  </a-segmented>
 </template>
 <script setup>
 import HomePage from "@/views/HomePage";
@@ -20,107 +29,115 @@ export default {
       chart: null,
       option: Object,
       loading: true,
+      data: ['历年最受欢迎电影', '历年各种类型电影数量', '电影类型数量世界地图'],
+      value: '历年最受欢迎电影',
+      type: ['全部', '动作', '动画', '喜剧', '犯罪', '科幻', '历史', '音乐', '爱情', '悬疑', '惊悚'],
+      value2: '全部',
+      value3: '全部',
     }
   },
   methods: {
-    async fuck() {
-      try {
-        const response = await axios.post('http://localhost:8080/chart/chart1',
-            {}).then(response => {
-          let len = response.data.length;
-          for (let i = 0; i < len; i++) {
-            this.category.push(response.data[i].year);
-            this.barData.push(parseInt(response.data[i].popular));
-            this.movieName.push(response.data[i].name);
-            // this.lineData.push(parseInt(response.data[i].popular));
-          }
-        }, error => {
-        })
-      } catch (error) {
-      }
+    async onChange() {
+      this.loading = true;
+      // await this.getGraph();
+      this.loading = false;
     },
     async getGraph() {
+      this.category = [];
+      this.lineData = [];
+      this.barData = [];
+      this.movieName = [];
       const echarts = await import('echarts');
-      var mychart = echarts.init(document.getElementById('graph'));
-      const zoomSize = 6;
-      await this.fuck();
-      this.loading = false;
-      console.log(this.category);
-      console.log(this.barData);
-      console.log(this.movieName);
-      let movieName = this.movieName;
-      mychart.setOption({
-        backgroundColor: '#fff',
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow'
-          },
-          formatter: function (params) {
-            let tooltip = params[0].name + '年<br>';
-            for (let i = 0; i < params.length; i++) {
-              tooltip += params[i].marker + ' ' + params[i].seriesName
-                  + ': ' + '&nbsp;&nbsp;<strong>' + params[i].value + '</strong>' + '<br>';
-              tooltip += movieName[params[i].dataIndex] + '<br>';
+      let myChart = echarts.init(document.getElementById('graph'));
+      if (this.value === '历年最受欢迎电影') {
+        try {
+          const response = await axios.post('http://localhost:8080/chart/chart1',
+              {}).then(response => {
+            let len = response.data.length;
+            for (let i = 0; i < len; i++) {
+              this.category.push(response.data[i].year);
+              this.barData.push(parseInt(response.data[i].popular));
+              this.movieName.push(response.data[i].name);
             }
-            return tooltip;
-          },
-        },
-        legend: {
-          data: ['人气值'],
-          textStyle: {
-            color: '#ccc'
-          }
-        },
-        xAxis: {
-          data: this.category,
-          axisLine: {
-            lineStyle: {
-              color: '#333'
-            }
-          }
-        },
-        yAxis: {
-          splitLine: {show: false},
-          axisLine: {
-            lineStyle: {
-              color: '#333'
-            }
-          }
-        },
-        series: [
-          {
-            name: '人气值',
-            type: 'bar',
-            barWidth: 10,
-            itemStyle: {
-              borderRadius: 5,
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {offset: 0, color: '#14c8d4'},
-                {offset: 1, color: '#43eec6'}
-              ])
-            },
-            data: this.barData,
-          },
-        ],
-        title: {
-          text: '1911-2015年最受欢迎的电影及其人气',
-          textStyle: {
-            verticalAlign: 'bottom',
-          }
+          }, error => {
+          })
+        } catch (error) {
         }
-      });
+        console.log(this.movieName);
+        let movieName = this.movieName;
+        myChart.setOption({
+          backgroundColor: '#fff',
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            },
+            formatter: function (params) {
+              let tooltip = params[0].name + '年<br>';
+              for (let i = 0; i < params.length; i++) {
+                tooltip += params[i].marker + ' ' + params[i].seriesName
+                    + ': ' + '&nbsp;&nbsp;<strong>' + params[i].value + '</strong>' + '<br>';
+                tooltip += movieName[params[i].dataIndex] + '<br>';
+              }
+              return tooltip;
+            },
+          },
+          legend: {
+            data: ['人气值'],
+            textStyle: {
+              color: '#ccc'
+            }
+          },
+          xAxis: {
+            data: this.category,
+            axisLine: {
+              lineStyle: {
+                color: '#333'
+              }
+            }
+          },
+          yAxis: {
+            splitLine: {show: false},
+            axisLine: {
+              lineStyle: {
+                color: '#333'
+              }
+            }
+          },
+          series: [
+            {
+              name: '人气值',
+              type: 'bar',
+              barWidth: 10,
+              itemStyle: {
+                borderRadius: 5,
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {offset: 0, color: '#14c8d4'},
+                  {offset: 1, color: '#43eec6'}
+                ])
+              },
+              data: this.barData,
+            },
+          ],
+          title: {
+            text: '1911-2015年最受欢迎的电影及其人气值',
+            textStyle: {
+              verticalAlign: 'bottom',
+            }
+          }
+        });
+      } else if (this.value === '历年各种类型电影数量') {
+        myChart.dispose();
+      } else if (this.value === '电影类型数量世界地图') {
+        myChart.dispose();
+      }
     }
   },
-  created() {   /*配置项目设定*/
-  },
-  async mounted() {
-    // document.getElementById('graph').style.display = 'none';
+  async beforeMount() {
     this.loading = true;
     await this.getGraph();
     this.loading = false;
-    // document.getElementById('graph').style.display = 'block';
-  },
+  }
 }
 </script>
 <style scoped>
