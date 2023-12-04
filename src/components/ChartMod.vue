@@ -1,6 +1,6 @@
 <template>
-  <div id="graph">
-  </div>
+  <a-card id="graph">
+  </a-card>
 </template>
 <script setup>
 import HomePage from "@/views/HomePage";
@@ -24,6 +24,7 @@ export default {
       category: [],
       lineData: [],
       barData: [],
+      movieName: [],
       chart: null,
       option: Object,
     }
@@ -37,7 +38,8 @@ export default {
           for (let i = 0; i < len; i++) {
             this.category.push(response.data[i].year);
             this.barData.push(parseInt(response.data[i].popular));
-            this.lineData.push(parseInt(response.data[i].popular));
+            this.movieName.push(response.data[i].name);
+            // this.lineData.push(parseInt(response.data[i].popular));
           }
         }, error => {
         })
@@ -53,16 +55,27 @@ export default {
     await this.fuck();
     console.log(this.category);
     console.log(this.barData);
+    console.log(this.movieName);
+    let movieName = this.movieName;
     myChart.setOption({
-      backgroundColor: '#0f375f',
+      backgroundColor: '#fff',
       tooltip: {
         trigger: 'axis',
         axisPointer: {
           type: 'shadow'
-        }
+        },
+        formatter: function (params) {
+          let tooltip = params[0].name + '年<br>';
+          for (let i = 0; i < params.length; i++) {
+            tooltip += params[i].marker + ' ' + params[i].seriesName
+                + ': ' + '&nbsp;&nbsp;<strong>' + params[i].value + '</strong>' + '<br>';
+            tooltip += movieName[params[i].dataIndex] + '<br>';
+          }
+          return tooltip;
+        },
       },
       legend: {
-        data: ['line', 'bar'],
+        data: ['人气值'],
         textStyle: {
           color: '#ccc'
         }
@@ -71,7 +84,7 @@ export default {
         data: this.category,
         axisLine: {
           lineStyle: {
-            color: '#ccc'
+            color: '#333'
           }
         }
       },
@@ -79,22 +92,22 @@ export default {
         splitLine: {show: false},
         axisLine: {
           lineStyle: {
-            color: '#ccc'
+            color: '#333'
           }
         }
       },
       series: [
+        // {
+        //   name: 'line',
+        //   type: 'line',
+        //   smooth: true,
+        //   showAllSymbol: true,
+        //   symbol: 'emptyCircle',
+        //   symbolSize: 15,
+        //   data: this.lineData
+        // },
         {
-          name: 'line',
-          type: 'line',
-          smooth: true,
-          showAllSymbol: true,
-          symbol: 'emptyCircle',
-          symbolSize: 15,
-          data: this.lineData
-        },
-        {
-          name: 'bar',
+          name: '人气值',
           type: 'bar',
           barWidth: 10,
           itemStyle: {
@@ -104,37 +117,43 @@ export default {
               {offset: 1, color: '#43eec6'}
             ])
           },
-          data: this.barData
+          data: this.barData,
         },
-        {
-          name: 'line',
-          type: 'bar',
-          barGap: '-100%',
-          barWidth: 10,
-          itemStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {offset: 0, color: 'rgba(20,200,212,0.5)'},
-              {offset: 0.2, color: 'rgba(20,200,212,0.2)'},
-              {offset: 1, color: 'rgba(20,200,212,0)'}
-            ])
-          },
-          z: -12,
-          data: this.lineData
-        },
-        {
-          name: 'dotted',
-          type: 'pictorialBar',
-          symbol: 'rect',
-          itemStyle: {
-            color: '#0f375f'
-          },
-          symbolRepeat: true,
-          symbolSize: [12, 4],
-          symbolMargin: 1,
-          z: -10,
-          data: this.lineData
+        // {
+        //   name: 'line',
+        //   type: 'bar',
+        //   barGap: '-100%',
+        //   barWidth: 10,
+        //   itemStyle: {
+        //     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        //       {offset: 0, color: 'rgba(20,200,212,0.5)'},
+        //       {offset: 0.2, color: 'rgba(20,200,212,0.2)'},
+        //       {offset: 1, color: 'rgba(20,200,212,0)'}
+        //     ])
+        //   },
+        //   z: -12,
+        //   data: this.lineData
+        // },
+        // {
+        //   name: 'dotted',
+        //   type: 'pictorialBar',
+        //   symbol: 'rect',
+        //   itemStyle: {
+        //     color: '#0f375f'
+        //   },
+        //   symbolRepeat: true,
+        //   symbolSize: [12, 4],
+        //   symbolMargin: 1,
+        //   z: -10,
+        //   data: this.lineData
+        // }
+      ],
+      title: {
+        text: '1911-2015年最受欢迎的电影及其人气',
+        textStyle: {
+          verticalAlign: 'bottom',
         }
-      ]
+      }
     });
   },
 }
