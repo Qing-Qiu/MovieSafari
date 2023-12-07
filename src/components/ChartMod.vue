@@ -3,19 +3,24 @@
     <div id="graph">
     </div>
   </a-list>
-  <a-segmented v-model:value="value" :options="data" @click="onChange()">
+  <a-segmented v-model:value="value" :options="data" @change="onChange()">
   </a-segmented>
   <br/>
-  <a-segmented v-if="value==='历年各种类型电影数量'" v-model:value="value2"
-               :options="type" @click="onChange()">
+  <a-segmented v-if="value==='历年各种类型电影数量（柱状图）'" v-model:value="value2"
+               :options="type" @change="onChange()">
   </a-segmented>
-  <a-segmented v-if="value==='电影类型数量世界地图'" v-model:value="value3"
-               :options="type" @click="onChange()">
-  </a-segmented>
+  <div v-if="value === '历年各种类型电影数量（饼图）'">
+    <div v-for="(group,index) in groupedOptions" :key="index">
+      <a-segmented v-model:value="value3" :options="group"
+                   @change="onChange()">
+      </a-segmented>
+    </div>
+  </div>
+
 </template>
 <script setup>
 import HomePage from "@/views/HomePage";
-</script>
+</script>·
 <script>
 import axios from "axios";
 
@@ -29,17 +34,28 @@ export default {
       chart: null,
       option: Object,
       loading: true,
-      data: ['历年最受欢迎电影', '历年各种类型电影数量', '电影类型数量世界地图'],
+      data: ['历年最受欢迎电影', '历年各种类型电影数量（柱状图）', '历年各种类型电影数量（饼图）'],
       value: '历年最受欢迎电影',
       type: ['全部', '动作', '动画', '喜剧', '犯罪', '科幻', '历史', '音乐', '爱情', '悬疑', '惊悚'],
+      year: ['全部'],
       value2: '全部',
       value3: '全部',
+    }
+  },
+  computed: {
+    groupedOptions() {
+      const groupSize = 15;
+      const options = this.year;
+      return Array.from({length: Math.ceil(options.length / groupSize)}, (_, index) => {
+        const start = index * groupSize;
+        return options.slice(start, start + groupSize);
+      });
     }
   },
   methods: {
     async onChange() {
       this.loading = true;
-      // await this.getGraph();
+      await this.getGraph();
       this.loading = false;
     },
     async getGraph() {
@@ -49,6 +65,7 @@ export default {
       this.movieName = [];
       const echarts = await import('echarts');
       let myChart = echarts.init(document.getElementById('graph'));
+      myChart.clear();
       if (this.value === '历年最受欢迎电影') {
         try {
           const response = await axios.post('http://localhost:8080/chart/chart1',
@@ -83,7 +100,7 @@ export default {
             },
           },
           legend: {
-            data: ['人气值'],
+            data: ['观看人数'],
             textStyle: {
               color: '#ccc'
             }
@@ -106,7 +123,7 @@ export default {
           },
           series: [
             {
-              name: '人气值',
+              name: '观看人数',
               type: 'bar',
               barWidth: 10,
               itemStyle: {
@@ -120,20 +137,97 @@ export default {
             },
           ],
           title: {
-            text: '1911-2015年最受欢迎的电影及其人气值',
+            text: '1911-2015年最受欢迎的电影及其观看人数',
             textStyle: {
               verticalAlign: 'bottom',
             }
           }
         });
-      } else if (this.value === '历年各种类型电影数量') {
-        myChart.dispose();
-      } else if (this.value === '电影类型数量世界地图') {
-        myChart.dispose();
+      } else if (this.value === '历年各种类型电影数量（柱状图）') {
+        try {
+          const response = await axios.post('http://localhost:8080/chart/chart2',
+              {tag: (this.value2 === '全部' ? '' : this.value2)}).then(response => {
+            let len = response.data.length;
+            console.log(response);
+            for (let i = 0; i < len; i++) {
+              this.category.push(response.data[i].year);
+              this.barData.push(parseInt(response.data[i].genre));
+            }
+          }, error => {
+          })
+        } catch (error) {
+        }
+        myChart.setOption({
+          backgroundColor: '#fff',
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            },
+          },
+          legend: {
+            data: ['发行数'],
+            textStyle: {
+              color: '#ccc'
+            }
+          },
+          xAxis: {
+            data: this.category,
+            axisLine: {
+              lineStyle: {
+                color: '#333'
+              }
+            }
+          },
+          yAxis: {
+            splitLine: {show: false},
+            axisLine: {
+              lineStyle: {
+                color: '#333'
+              }
+            }
+          },
+          series: [
+            {
+              name: '发行数',
+              type: 'bar',
+              barWidth: 10,
+              itemStyle: {
+                borderRadius: 5,
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {offset: 0, color: '#14c8d4'},
+                  {offset: 1, color: '#43eec6'}
+                ])
+              },
+              data: this.barData,
+            },
+          ],
+          title: {
+            text: '1911-2015年' + this.value2 + ((this.value2 === '全部') ? '' : '类') + '电影发行总数',
+            textStyle: {
+              verticalAlign: 'bottom',
+            }
+          }
+        });
+      } else if (this.value === '历年各种类型电影数量（饼图）') {
+
+
       }
     }
   },
   async beforeMount() {
+    try {
+      const response = await axios.post('http://localhost:8080/chart/year',
+          {}).then(response => {
+        let len = response.data.length;
+        console.log(response);
+        for (let i = 0; i < len; i++) {
+          this.year.push(response.data[i]);
+        }
+      }, error => {
+      })
+    } catch (error) {
+    }
     this.loading = true;
     await this.getGraph();
     this.loading = false;
