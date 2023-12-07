@@ -6,6 +6,7 @@
     <select id="getMovieYears" resultType="string">
         SELECT DISTINCT year
         FROM movie
+        WHERE year&lt;2016
         ORDER BY year;
     </select>
     <select id="getMostPopularMovie" resultType="com.example.douban.pojo.Movie">
@@ -13,5 +14,10 @@
         FROM movie
         WHERE year = #{year}
         ORDER BY CAST(popular AS SIGNED) DESC LIMIT 1;
+    </select>
+    <select id="getMovieCountByTag" resultType="com.example.douban.pojo.Movie">
+        SELECT COUNT(*) AS genre, year
+        FROM movie
+        WHERE year = #{year} AND genre LIKE CONCAT('%', #{tag}, '%');
     </select>
 </mapper>

@@ -13,4 +13,6 @@ public interface ChartMapper {
     ArrayList<String> getMovieYears();
 
     Movie getMostPopularMovie(@Param("year") String year);
+
+    Movie getMovieCountByTag(@Param("year") String year, @Param("tag") String tag);
 }

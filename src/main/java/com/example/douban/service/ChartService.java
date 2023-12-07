@@ -23,4 +23,8 @@ public class ChartService {
     public Movie getMostPopularMovie(String year) {
         return chartMapper.getMostPopularMovie(year);
     }
+
+    public Movie getMovieCountByTag(String year, String tag) {
+        return chartMapper.getMovieCountByTag(year, tag);
+    }
 }
