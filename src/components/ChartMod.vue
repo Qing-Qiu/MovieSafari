@@ -16,7 +16,6 @@
       </a-segmented>
     </div>
   </div>
-
 </template>
 <script setup>
 import HomePage from "@/views/HomePage";
@@ -30,14 +29,15 @@ export default {
       category: [],
       lineData: [],
       barData: [],
+      pieData: [],
       movieName: [],
       chart: null,
       option: Object,
       loading: true,
       data: ['历年最受欢迎电影', '历年各种类型电影数量（柱状图）', '历年各种类型电影数量（饼图）'],
       value: '历年最受欢迎电影',
-      type: ['全部', '动作', '动画', '喜剧', '犯罪', '科幻', '历史', '音乐', '爱情', '悬疑', '惊悚'],
-      year: ['全部'],
+      type: ['全部', '动作', '动画', '喜剧', '犯罪', '科幻', '历史', '音乐', '爱情', '悬疑', '惊悚', '其它'],
+      year: [],
       value2: '全部',
       value3: '全部',
     }
@@ -62,6 +62,7 @@ export default {
       this.category = [];
       this.lineData = [];
       this.barData = [];
+      this.pieData = [];
       this.movieName = [];
       const echarts = await import('echarts');
       let myChart = echarts.init(document.getElementById('graph'));
@@ -151,7 +152,7 @@ export default {
             console.log(response);
             for (let i = 0; i < len; i++) {
               this.category.push(response.data[i].year);
-              this.barData.push(parseInt(response.data[i].genre));
+              this.barData.push(parseInt(response.data[i].movieID));
             }
           }, error => {
           })
@@ -210,8 +211,54 @@ export default {
           }
         });
       } else if (this.value === '历年各种类型电影数量（饼图）') {
-
-
+        try {
+          const response = await axios.post('http://localhost:8080/chart/chart3',
+              {year: this.value3}).then(response => {
+            let len = response.data.length;
+            console.log(response);
+            for (let i = 0; i < len; i++) {
+              // this.category.push(response.data[i].genre);
+              this.pieData.push({
+                name: response.data[i].genre,
+                value: parseInt(response.data[i].movieID)
+              });
+            }
+          }, error => {
+          })
+        } catch (error) {
+        }
+        console.log(this.category);
+        console.log(this.pieData);
+        myChart.setOption({
+          backgroundColor: '#fff',
+          tooltip: {
+            trigger: 'item', // You can customize the trigger type as needed
+            formatter: '{b}: {c} ({d}%)', // Customize the tooltip content
+          },
+          legend: {
+            data: this.pieData,
+            textStyle: {
+              color: '#ccc',
+              fontSize: 12,
+            }
+          },
+          series: [
+            {
+              type: 'pie',
+              data: this.pieData,
+              label: {
+                show: true,
+                formatter: '{b}: {c} ({d}%)',
+              }
+            },
+          ],
+          title: {
+            text: (this.value3 === '全部' ? '历' : this.value3) + '年各类型电影发行总数',
+            textStyle: {
+              verticalAlign: 'bottom',
+            }
+          }
+        });
       }
     }
   },
@@ -224,6 +271,8 @@ export default {
         for (let i = 0; i < len; i++) {
           this.year.push(response.data[i]);
         }
+        this.year.push("全部");
+        this.year = this.year.reverse();
       }, error => {
       })
     } catch (error) {

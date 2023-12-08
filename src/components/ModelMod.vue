@@ -8,7 +8,6 @@
           :label-col="{ span: 8 }"
           :wrapper-col="{ span: 16 }"
           autocomplete="off"
-          @submit="submitForm"
       >
         <a-form-item
             label=""
