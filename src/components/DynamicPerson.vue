@@ -22,16 +22,24 @@
             <a-typography-text strong>出生地：</a-typography-text>
             {{ this.person_content.birthplace }}
           </a-typography-paragraph>
-          <a-typography-paragraph style="text-align: left">
-            <a-typography-text strong>简介：</a-typography-text>
-            <a-typography-paragraph :content=" this.person_content.summary "
-                                    :ellipsis="ellipsis ? { rows: 6, expandable: true, symbol: '展开全部' } : false"/>
-          </a-typography-paragraph>
         </a-typography>
       </a-col>
       <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
     </a-row>
   </a-card>
+  <a-row>
+    <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+    <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+      <a-card>
+        <a-typography-paragraph style="text-align: left">
+          <a-typography-text strong>简介：</a-typography-text>
+          <a-typography-paragraph :content=" this.person_content.summary "
+                                  :ellipsis="ellipsis ? { rows: 5, expandable: true, symbol: '展开全部' } : false"/>
+        </a-typography-paragraph>
+      </a-card>
+    </a-col>
+    <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+  </a-row>
   <a-row>
     <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
     <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
