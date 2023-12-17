@@ -48,9 +48,6 @@
           <template #overlay>
             <a-menu>
               <a-menu-item :key="5" @click="handleMenuClick('5')">
-                设置偏好
-              </a-menu-item>
-              <a-menu-item :key="6" @click="handleMenuClick('6')">
                 登出
               </a-menu-item>
             </a-menu>
@@ -115,9 +112,6 @@ export default {
           router.push({path: '/about'});
           break;
         case '5':
-          router.push({path: '/prefer'});
-          break;
-        case '6':
           sessionStorage.clear();
           this.username = '';
           this.nickname = '';

@@ -8,7 +8,6 @@ import MovieCenterMod from "../components/MovieCenterMod";
 import RecommendSearchMod from "../components/RecommendSearchMod";
 import ModelMod from "../components/ModelMod";
 import ChartMod from "../components/ChartMod";
-import PreferMod from "../components/PreferMod";
 import DynamicPerson from "@/components/DynamicPerson";
 
 const routes = [
@@ -70,13 +69,6 @@ const routes = [
         meta: {
             dependent: false,
             selects: ['3-2'],
-        }
-    },
-    {
-        path: '/prefer',
-        component: PreferMod,
-        meta: {
-            dependent: false,
         }
     },
     {

@@ -28,27 +28,34 @@
   </a-row>
   <template v-if="!search">
     <h2>猜你喜欢</h2>
-    <a-button @click="refresh()">换一批</a-button>
-    <a-row>
-      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-      <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
-        <div class="image-grid">
-          <a-card
-              v-for="(item, itemIndex) in recommendedImages"
-              :key="itemIndex"
-              class="image-card"
-              hoverable
-              @click="watchMovieDetail(item.id)"
-          >
-            <div class="card-content" v-if="recommendedImages.length">
-              <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
-              <a-card-meta :title="item.title" :description="item.description"/>
-            </div>
-          </a-card>
-        </div>
-      </a-col>
-      <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
-    </a-row>
+    <template v-if="loading">
+      <a-button disabled>换一批</a-button>
+      <a-list :loading="loading">
+      </a-list>
+    </template>
+    <template v-if="!loading">
+      <a-button @click="refresh()">换一批</a-button>
+      <a-row>
+        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+        <a-col :xs="16" :sm="16" :md="16" :lg="16" :xl="16" :xxl="16">
+          <div class="image-grid">
+            <a-card
+                v-for="(item, itemIndex) in recommendedImages"
+                :key="itemIndex"
+                class="image-card"
+                hoverable
+                @click="watchMovieDetail(item.id)"
+            >
+              <div class="card-content" v-if="recommendedImages.length">
+                <img :src="item.image" :alt="item.title" referrerpolicy="no-referrer"/>
+                <a-card-meta :title="item.title" :description="item.description"/>
+              </div>
+            </a-card>
+          </div>
+        </a-col>
+        <a-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4" :xxl="4"></a-col>
+      </a-row>
+    </template>
   </template>
   <template v-else-if="search">
     <a-button @click="backward()">
@@ -150,9 +157,12 @@ export default {
       limit2: 8,
       offset2: 0,
       count2: 0,
+      nickname: '',
+      loading: false,
     };
   },
   beforeMount() {
+    this.nickname = sessionStorage.getItem('nickname');
     this.fetchData();
   },
   methods: {
@@ -176,8 +186,9 @@ export default {
 
     async fetchData() {
       try {
+        this.loading = true;
         const response = await axios.post('http://localhost:8080/movie/recommend',
-            {}).then(
+            {nickname: this.nickname}).then(
             response => {
               console.log(response.data);
               for (let i = 0; i < 8; i++) {
@@ -201,6 +212,7 @@ export default {
             error => {
             }
         )
+        this.loading = false;
       } catch (error) {
       }
     },

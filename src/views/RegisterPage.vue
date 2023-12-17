@@ -74,25 +74,6 @@
       </template>
     </a-result>
   </div>
-  <div class="login-container" v-else-if="stat==='prefer'" :key="3">
-    <a-form
-        ref="formRef"
-        :model="formState"
-        name="basic"
-        :label-col="{ span: 8 }"
-        :wrapper-col="{ span: 16 }"
-        :rules="rules"
-        autocomplete="off"
-        @finish="onFinish"
-        class="login-form"
-        @validate="handleValidate"
-    >
-      <h1 class="login-title">请选择您感兴趣的类型</h1>
-      <a-button @click="submitPrefer">完成</a-button>
-
-    </a-form>
-
-  </div>
 </template>
 <script setup>
 import {reactive, ref} from 'vue';
@@ -182,10 +163,7 @@ const onFinish = async values => {
       console.error('无法执行复制命令', err);
     }
     document.body.removeChild(textArea);
-
-    stat.value = 'prefer';
-    console.log(stat);
-    console.log(response.data[1]);
+    stat.value = 'success';
   } else {
     alert("错误");
     window.location.reload();
@@ -195,10 +173,6 @@ const onFinish = async values => {
 
 const generator = (username) => {
   return "请记住您的账号：" + username + "\n账号已经复制到您的剪贴板.";
-}
-
-const submitPrefer = () => {
-  stat.value = 'success';
 }
 
 </script>
