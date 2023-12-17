@@ -26,7 +26,7 @@
         </a-sub-menu>
         <a-menu-item key="4" @click="handleMenuClick('4')">
           <InfoOutlined/>
-          <span>关于</span>
+          <span>关于作者</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
@@ -109,7 +109,7 @@ export default {
           router.push({path: '/chart'});
           break;
         case '4':
-          router.push({path: '/about'});
+          window.open('https://github.com/Qing-Qiu/MovieSafari', '_blank');
           break;
         case '5':
           sessionStorage.clear();

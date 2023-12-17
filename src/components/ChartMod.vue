@@ -19,7 +19,7 @@
 </template>
 <script setup>
 import HomePage from "@/views/HomePage";
-</script>·
+</script>
 <script>
 import axios from "axios";
 

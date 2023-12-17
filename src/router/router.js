@@ -3,12 +3,12 @@ import LoginPage from '../views/LoginPage';
 import HomePage from '../views/HomePage';
 import RegisterPage from '../views/RegisterPage';
 import DynamicMovie from '../components/DynamicMovie';
-import AboutMod from '../components/AboutMod'
 import MovieCenterMod from "../components/MovieCenterMod";
 import RecommendSearchMod from "../components/RecommendSearchMod";
 import ModelMod from "../components/ModelMod";
 import ChartMod from "../components/ChartMod";
 import DynamicPerson from "@/components/DynamicPerson";
+import NotFoundPage from "../views/NotFoundPage";
 
 const routes = [
     {
@@ -36,15 +36,6 @@ const routes = [
         meta: {
             dependent: false,
             selects: ['1'],
-        }
-    },
-    {
-        path: '/about',
-        name: 'About',
-        component: AboutMod,
-        meta: {
-            dependent: false,
-            selects: ['4'],
         }
     },
     {
@@ -91,6 +82,14 @@ const routes = [
             selects: ['1'],
         }
     },
+    {
+        path: '/:path(.*)',
+        name: 'NotFoundPage',
+        component: () => import('../views/NotFoundPage'),
+        meta: {
+            dependent: true,
+        }
+    }
 ];
 
 const router = createRouter({
