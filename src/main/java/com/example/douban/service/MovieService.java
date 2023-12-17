@@ -20,8 +20,8 @@ public class MovieService {
         return movieMapper.findMovieById(id);
     }
 
-    public ArrayList<Movie> findAllMovies() {
-        return movieMapper.findAllMovies();
+    public Movie findRandomMovie(String offset) {
+        return movieMapper.findRandomMovie(offset);
     }
 
     public ArrayList<Movie> findMovieByTag(String tag1, String tag2, String tag3, String limit, String offset) {
@@ -38,5 +38,13 @@ public class MovieService {
 
     public Integer countMovieByKeywords(String keyword) {
         return movieMapper.countMovieByKeywords(keyword);
+    }
+
+    public String findUserIdByNickname(String nickname) {
+        return movieMapper.findUserIdByNickname(nickname);
+    }
+
+    public String findMovieIdById(String id) {
+        return movieMapper.findMovieIdById(id);
     }
 }

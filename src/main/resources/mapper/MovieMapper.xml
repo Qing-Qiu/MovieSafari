@@ -21,10 +21,12 @@
         FROM movie
         WHERE movieID = #{id}
     </select>
-    <select id="findAllMovies" resultType="com.example.douban.pojo.Movie">
+    <select id="findRandomMovie" resultType="com.example.douban.pojo.Movie">
         SELECT *
         FROM movie
-        ORDER BY rand() LIMIT 8
+        ORDER BY CAST(popular AS SIGNED) DESC
+        LIMIT 1
+        OFFSET ${offset};
     </select>
     <select id="findMovieByTag" resultType="com.example.douban.pojo.Movie">
         SELECT *
@@ -146,5 +148,15 @@
         SELECT count(*)
         FROM movie
         WHERE name LIKE CONCAT('%', #{keyword}, '%');
+    </select>
+    <select id="findUserIdByNickname" resultType="String">
+        SELECT 序号 as userID
+        FROM usrid
+        WHERE id = #{nickname};
+    </select>
+    <select id="findMovieIdById" resultType="String">
+        SELECT movieID
+        FROM movid
+        WHERE 序号 = #{id};
     </select>
 </mapper>

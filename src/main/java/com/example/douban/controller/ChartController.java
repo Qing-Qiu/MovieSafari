@@ -66,13 +66,10 @@ public class ChartController {
     public ResponseEntity<ArrayList<Movie>> handleChart3(@RequestBody Map<String, String> data) {
         try {
             String[] types = new String[]{"动作", "动画", "喜剧", "犯罪"
-                    , "科幻", "历史", "音乐", "爱情", "悬疑", "惊悚","其它"};
+                    , "科幻", "历史", "音乐", "爱情", "悬疑", "惊悚", "其它"};
             ArrayList<Movie> res = new ArrayList<>();
             for (String type : types) {
                 Movie movie = chartService.getMovieCountByTag(data.get("year"), type);
-//                if (movie.getGenre().equals("0")) {
-//                    movie.setYear(year);
-//                }
                 res.add(movie);
             }
             return ResponseEntity.ok(res);
