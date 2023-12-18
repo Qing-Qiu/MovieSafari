@@ -8,7 +8,7 @@ import RecommendSearchMod from "../components/RecommendSearchMod";
 import ModelMod from "../components/ModelMod";
 import ChartMod from "../components/ChartMod";
 import DynamicPerson from "@/components/DynamicPerson";
-import NotFoundPage from "../views/NotFoundPage";
+import MusicMod from "@/components/MusicMod";
 
 const routes = [
     {
@@ -60,6 +60,14 @@ const routes = [
         meta: {
             dependent: false,
             selects: ['3-2'],
+        }
+    },
+    {
+        path: '/music',
+        component: MusicMod,
+        meta: {
+            dependent: false,
+            selects: ['3-3'],
         }
     },
     {

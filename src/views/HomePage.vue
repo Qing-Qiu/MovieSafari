@@ -23,9 +23,13 @@
             <BarChartOutlined/>
             <span>可视化展示</span>
           </a-menu-item>
+          <a-menu-item key="3-3" @click="handleMenuClick('3-3')">
+            <CustomerServiceOutlined/>
+            <span>音乐播放</span>
+          </a-menu-item>
         </a-sub-menu>
         <a-menu-item key="4" @click="handleMenuClick('4')">
-          <InfoOutlined/>
+          <GithubOutlined/>
           <span>关于作者</span>
         </a-menu-item>
       </a-menu>
@@ -38,6 +42,7 @@
             @click="() => (collapsed = !collapsed)"
         />
         <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)"/>
+        <MusicPlayer/>
         <a-typography-text
             style="margin-left: auto;
                   margin-right: 10px;
@@ -67,10 +72,11 @@ import {
   PlayCircleOutlined,
   SettingOutlined,
   BarChartOutlined,
-  InfoOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  HomeOutlined
+  HomeOutlined,
+  CustomerServiceOutlined,
+  GithubOutlined
 } from "@ant-design/icons-vue";
 import router from "@/router/router";
 
@@ -79,7 +85,8 @@ export default {
     PlayCircleOutlined,
     SettingOutlined,
     BarChartOutlined,
-    InfoOutlined,
+    CustomerServiceOutlined,
+    GithubOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
     HomeOutlined
@@ -107,6 +114,9 @@ export default {
           break;
         case '3-2':
           router.push({path: '/chart'});
+          break;
+        case '3-3':
+          router.push({path: '/music'});
           break;
         case '4':
           window.open('https://github.com/Qing-Qiu/MovieSafari', '_blank');
@@ -136,6 +146,7 @@ export default {
 
 <script setup>
 import UserImage from '@/assets/meow.jpg';
+import MusicPlayer from "@/components/MusicPlayer";
 </script>
 
 <style scoped>
