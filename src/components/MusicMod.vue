@@ -31,25 +31,31 @@
       <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8"></a-col>
       <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8">
         <a-card style="height: 100vh; overflow: auto">
-          <a-list item-layout="horizontal" :data-source="song_list">
-            <template #renderItem="{ item }">
-              <a-list-item>
-                <template #actions>
-                  <a-button @click="playSong(item.rid)">
-                    播放
-                  </a-button>
-                </template>
-                <a-list-item-meta style="text-align: left">
-                  <template #title>
-                    {{ item.name }}
+          <div v-if="song_list.length > 0">
+            <a-list item-layout="horizontal" :data-source="song_list">
+              <template #renderItem="{ item }">
+                <a-list-item>
+                  <template #actions>
+                    <a-button @click="playSong(item.rid)">
+                      播放
+                    </a-button>
                   </template>
-                  <template #description>
-                    {{ item.artist }}
-                  </template>
-                </a-list-item-meta>
-              </a-list-item>
-            </template>
-          </a-list>
+                  <a-list-item-meta style="text-align: left">
+                    <template #title>
+                      {{ item.name }}
+                    </template>
+                    <template #description>
+                      {{ item.artist }}
+                    </template>
+                  </a-list-item-meta>
+                </a-list-item>
+              </template>
+            </a-list>
+            <a-button disabled v-if="page_num === 1">上一页</a-button>
+            <a-button @click="prevSong()" v-else>上一页</a-button>
+            &nbsp;&nbsp;<a-tooltip>{{ page_num }}</a-tooltip>&nbsp;&nbsp;
+            <a-button @click="nextSong()">下一页</a-button>
+          </div>
         </a-card>
       </a-col>
       <a-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8" :xxl="8"></a-col>
@@ -68,9 +74,11 @@ const formState = reactive({
 let song_list = ref([]);
 let page_num = ref(1);
 let music_url = ref('');
+let music_lrc = ref('');
 const counter = useCounterStore();
 
 const submitForm = async () => {
+  page_num.value = 1;
   try {
     const response = await axios.get(
         'http://localhost:5000/search?key=' + formState.search + '&pn=' + page_num.value,
@@ -95,14 +103,71 @@ const playSong = async (rid) => {
         {}).then(
         response => {
           music_url = response.data;
-          counter.change(music_url);
-          console.log(counter.music_url);
+        },
+        error => {
+        }
+    )
+    const response1 = await axios.get(
+        'http://localhost:5000/lrc?rid=' + rid,
+        {}).then(
+        response => {
+          music_lrc = response.data;
+        },
+        error => {
+        }
+    )
+    counter.change(music_url, music_lrc);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const prevSong = async () => {
+  page_num.value -= 1;
+  try {
+    const response = await axios.get(
+        'http://localhost:5000/search?key=' + formState.search + '&pn=' + page_num.value,
+        {}).then(
+        response => {
+          song_list.value = response.data;
+          console.log(song_list);
         },
         error => {
         }
     )
   } catch (error) {
-    console.log(error);
+
+  }
+}
+
+const nextSong = async () => {
+  page_num.value += 1;
+  try {
+    const response = await axios.get(
+        'http://localhost:5000/search?key=' + formState.search + '&pn=' + page_num.value,
+        {}).then(
+        response => {
+          song_list.value = response.data;
+          console.log(song_list);
+        },
+        error => {
+        }
+    );
+    if (song_list.value.length === 0) {
+      page_num.value -= 1;
+      const response = await axios.get(
+          'http://localhost:5000/search?key=' + formState.search + '&pn=' + page_num.value,
+          {}).then(
+          response => {
+            song_list.value = response.data;
+            console.log(song_list);
+          },
+          error => {
+          }
+      );
+    }
+  } catch (error) {
+
   }
 }
 </script>
