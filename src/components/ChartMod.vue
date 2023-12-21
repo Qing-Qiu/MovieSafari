@@ -16,8 +16,11 @@
       </a-segmented>
     </div>
   </div>
-  <a-segmented v-if="value==='我的画像'" v-model:value="value4"
-               :options="shape" @change="onChange()">
+  <a-segmented v-if="value==='我的画像' && this.nickname" v-model:value="value4"
+               :options="shapes" @change="onChange()">
+  </a-segmented>
+  <a-segmented v-else-if="value==='我的画像'" :options="value5"
+               @change="onChange()" @click="login()">
   </a-segmented>
 </template>
 <script setup>
@@ -25,10 +28,12 @@ import HomePage from "@/views/HomePage";
 </script>
 <script>
 import axios from "axios";
+import router from "@/router/router";
 
 export default {
   data() {
     return {
+      nickname: '',
       category: [],
       lineData: [],
       barData: [],
@@ -45,14 +50,15 @@ export default {
       value2: '全部',
       value3: '全部',
       value4: '圆形',
-      shape: ['圆形', '心形', '菱形', '三角', '星形'],
+      shapes: ['圆形', '心形', '菱形', '三角', '星形'],
       map: {
         '圆形': 'circle',
         '心形': 'cardioid',
         '菱形': 'diamond',
         '三角': 'triangle',
         '星形': 'star'
-      }
+      },
+      value5: ['当前未登录，请登录后查看'],
     }
   },
   computed: {
@@ -327,9 +333,15 @@ export default {
           }]
         })
       }
+    },
+    login() {
+      sessionStorage.clear();
+      this.nickname = '';
+      router.push('/auth/login');
     }
   },
   async beforeMount() {
+    this.nickname = sessionStorage.getItem('nickname');
     try {
       const response = await axios.post('http://localhost:8080/chart/year',
           {}).then(response => {
