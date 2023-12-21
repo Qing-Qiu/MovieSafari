@@ -16,6 +16,9 @@
       </a-segmented>
     </div>
   </div>
+  <a-segmented v-if="value==='我的画像'" v-model:value="value4"
+               :options="shape" @change="onChange()">
+  </a-segmented>
 </template>
 <script setup>
 import HomePage from "@/views/HomePage";
@@ -31,15 +34,25 @@ export default {
       barData: [],
       pieData: [],
       movieName: [],
+      keyData: [],
       chart: null,
       option: Object,
       loading: true,
-      data: ['历年最受欢迎电影', '历年各种类型电影数量（柱状图）', '历年各种类型电影数量（饼图）'],
+      data: ['历年最受欢迎电影', '历年各种类型电影数量（柱状图）', '历年各种类型电影数量（饼图）', '我的画像'],
       value: '历年最受欢迎电影',
       type: ['全部', '动作', '动画', '喜剧', '犯罪', '科幻', '历史', '音乐', '爱情', '悬疑', '惊悚', '其它'],
       year: [],
       value2: '全部',
       value3: '全部',
+      value4: '圆形',
+      shape: ['圆形', '心形', '菱形', '三角', '星形'],
+      map: {
+        '圆形': 'circle',
+        '心形': 'cardioid',
+        '菱形': 'diamond',
+        '三角': 'triangle',
+        '星形': 'star'
+      }
     }
   },
   computed: {
@@ -64,7 +77,9 @@ export default {
       this.barData = [];
       this.pieData = [];
       this.movieName = [];
+      this.keyData = [];
       const echarts = await import('echarts');
+      await import('echarts-wordcloud');
       let myChart = echarts.init(document.getElementById('graph'));
       myChart.clear();
       if (this.value === '历年最受欢迎电影') {
@@ -259,6 +274,58 @@ export default {
             }
           }
         });
+      } else if (this.value === '我的画像') {
+        try {
+          const response = await axios.post('http://localhost:8080/movie/figure',
+              {nickname: sessionStorage.getItem('nickname')}).then(response => {
+            for (let i in response.data) {
+              this.keyData.push({
+                name: i,
+                value: response.data[i]
+              });
+            }
+          }, error => {
+          })
+        } catch (error) {
+        }
+        myChart.setOption({
+          series: [{
+            type: 'wordCloud',
+            shape: this.map[this.value4],
+            keepAspect: false,
+            left: 'center',
+            top: '-15px',
+            width: '98%',
+            height: '100%',
+            right: null,
+            bottom: null,
+            sizeRange: [18, 60],
+            rotationRange: [-90, 90],
+            rotationStep: 45,
+            gridSize: 8,
+            drawOutOfBound: false,
+            layoutAnimation: true,
+            textStyle: {
+              fontFamily: 'sans-serif',
+              fontWeight: 'bold',
+              color: function () {
+                return 'rgb(' + [
+                  Math.round(Math.random() * 160),
+                  Math.round(Math.random() * 160),
+                  Math.round(Math.random() * 160)
+                ].join(',') + ')';
+              }
+            },
+            emphasis: {
+              // focus: 'self',
+              textStyle: {
+                textShadowBlur: 5,
+                textShadowColor: '#333'
+              }
+            },
+            data: this.keyData,
+          }]
+        })
       }
     }
   },
