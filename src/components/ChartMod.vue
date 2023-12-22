@@ -282,7 +282,7 @@ export default {
         });
       } else if (this.value === '我的画像') {
         try {
-          const response = await axios.post('http://localhost:8080/movie/figure',
+          const response = await axios.post('http://localhost:8080/chart/figure',
               {nickname: sessionStorage.getItem('nickname')}).then(response => {
             for (let i in response.data) {
               this.keyData.push({
