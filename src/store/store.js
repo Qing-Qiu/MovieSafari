@@ -12,8 +12,6 @@ export const useCounterStore = defineStore('counter', {
         change(url, lrc) {
             this.music_url = url;
             this.music_lrc = lrc;
-            console.log(this.music_url);
-            console.log(this.music_lrc);
         }
     }
 })
