@@ -12,12 +12,8 @@ import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.wltea.analyzer.cfg.DefaultConfig;
-import org.wltea.analyzer.core.IKSegmenter;
-import org.wltea.analyzer.core.Lexeme;
 
 import java.io.File;
-import java.io.StringReader;
 import java.util.*;
 
 @RestController
@@ -86,53 +82,6 @@ public class MovieController {
                 movies.set(pos, tmp);
             }
             return ResponseEntity.ok(movies);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok(null);
-    }
-
-    @PostMapping("/figure")
-    public ResponseEntity<Map<String, Integer>> handleFigurePage(@RequestBody Map<String, String> userData) {
-        try {
-            String nickname = userData.get("nickname");
-            String userID = movieService.findUserIdByNickname(nickname);
-            System.out.println(userID);
-            if (userID == null) return ResponseEntity.ok(null);
-            File modelFile = new File("src/main/resources/static/ratInfo2.txt");
-            DataModel model = new FileDataModel(modelFile);
-            ItemSimilarity similarity = new PearsonCorrelationSimilarity(model);
-            Recommender recommender = new GenericItemBasedRecommender(model, similarity);
-            List<RecommendedItem> recommendedItemList = recommender.recommend(Long.parseLong(userID),
-                    5000);
-            StringBuilder words = new StringBuilder();
-            for (RecommendedItem recommendedItem : recommendedItemList) {
-                String itemID = String.valueOf(recommendedItem.getItemID());
-                String movieID = movieService.findMovieIdById(itemID);
-                if (movieID == null) continue;
-                Movie movie = movieService.findMovieById(movieID);
-                if (movie == null) continue;
-                words.append(movie.getGenre());
-            }
-            Map<String, Integer> frequencies = new HashMap<>();
-            DefaultConfig conf = new DefaultConfig();
-            conf.setUseSmart(true);
-            IKSegmenter segmenter = new IKSegmenter(new StringReader(words.toString()), conf);
-            Lexeme lexeme;
-            while ((lexeme = segmenter.next()) != null) {
-                if (lexeme.getLexemeText().length() > 1) {
-                    final String term = lexeme.getLexemeText();
-                    frequencies.compute(term, (k, v) -> {
-                        if (v == null) {
-                            v = 1;
-                        } else {
-                            v += 1;
-                        }
-                        return v;
-                    });
-                }
-            }
-            return ResponseEntity.ok(frequencies);
         } catch (Exception e) {
             e.printStackTrace();
         }

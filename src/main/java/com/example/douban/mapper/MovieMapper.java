@@ -25,4 +25,8 @@ public interface MovieMapper {
     String findUserIdByNickname(@Param("nickname") String nickname);
 
     String findMovieIdById(@Param("id") String id);
+
+    ArrayList<String> findMovieByNickname(@Param("nickname") String nickname);
+
+    ArrayList<String> findMovieByNickname2(@Param("nickname") String nickname);
 }

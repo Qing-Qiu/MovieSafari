@@ -1,13 +1,22 @@
 package com.example.douban.controller;
 
+import com.example.douban.mapper.MovieMapper;
 import com.example.douban.pojo.Account;
 import com.example.douban.pojo.Movie;
 import com.example.douban.service.ChartService;
+import com.example.douban.service.MovieService;
 import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.wltea.analyzer.cfg.DefaultConfig;
+import org.wltea.analyzer.core.IKSegmenter;
+import org.wltea.analyzer.core.Lexeme;
 
+import java.io.File;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,6 +25,8 @@ import java.util.Map;
 public class ChartController {
     @Resource
     ChartService chartService;
+    @Resource
+    MovieService movieService;
 
     @PostMapping("/chart1")
     public ResponseEntity<ArrayList<Movie>> handleChart1(@RequestBody Map<String, String> data) {
@@ -78,4 +89,47 @@ public class ChartController {
         }
         return ResponseEntity.ok(null);
     }
+
+    @PostMapping("/figure")
+    public ResponseEntity<Map<String, Integer>> handleFigurePage(@RequestBody Map<String, String> userData) {
+        try {
+            String nickname = userData.get("nickname");
+            StringBuilder words = new StringBuilder();
+            ArrayList<String> movieIds = movieService.findMovieByNickname(nickname);
+            for (String movieId : movieIds) {
+                Movie movie = movieService.findMovieById(movieId);
+                if (movie == null) continue;
+                words.append(movie.getGenre());
+            }
+            movieIds = movieService.findMovieByNickname2(nickname);
+            for (String movieID : movieIds) {
+                Movie movie = movieService.findMovieById(movieID);
+                if (movie == null) continue;
+                words.append(movie.getGenre());
+            }
+            Map<String, Integer> frequencies = new HashMap<>();
+            DefaultConfig conf = new DefaultConfig();
+            conf.setUseSmart(true);
+            IKSegmenter segmenter = new IKSegmenter(new StringReader(words.toString()), conf);
+            Lexeme lexeme;
+            while ((lexeme = segmenter.next()) != null) {
+                if (lexeme.getLexemeText().length() > 1) {
+                    final String term = lexeme.getLexemeText();
+                    frequencies.compute(term, (k, v) -> {
+                        if (v == null) {
+                            v = 1;
+                        } else {
+                            v += 1;
+                        }
+                        return v;
+                    });
+                }
+            }
+            return ResponseEntity.ok(frequencies);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(null);
+    }
+
 }

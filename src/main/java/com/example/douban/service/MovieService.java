@@ -47,4 +47,12 @@ public class MovieService {
     public String findMovieIdById(String id) {
         return movieMapper.findMovieIdById(id);
     }
+
+    public ArrayList<String> findMovieByNickname(String nickname) {
+        return movieMapper.findMovieByNickname(nickname);
+    }
+
+    public ArrayList<String> findMovieByNickname2(String nickname) {
+        return movieMapper.findMovieByNickname2(nickname);
+    }
 }

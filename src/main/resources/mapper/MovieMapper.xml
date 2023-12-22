@@ -25,8 +25,7 @@
         SELECT *
         FROM movie
         ORDER BY CAST(popular AS SIGNED) DESC
-        LIMIT 1
-        OFFSET ${offset};
+        LIMIT 1 OFFSET ${offset};
     </select>
     <select id="findMovieByTag" resultType="com.example.douban.pojo.Movie">
         SELECT *
@@ -158,5 +157,15 @@
         SELECT movieID
         FROM movid
         WHERE 序号 = #{id};
+    </select>
+    <select id="findMovieByNickname" resultType="String">
+        SELECT movid
+        FROM usrrate_none
+        WHERE nickname = #{nickname};
+    </select>
+    <select id="findMovieByNickname2" resultType="String">
+        SELECT movieID
+        FROM comments
+        WHERE nickname = #{nickname};
     </select>
 </mapper>
