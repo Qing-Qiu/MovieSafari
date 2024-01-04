@@ -260,6 +260,7 @@ export default {
         )
       } catch (error) {
       }
+      this.new_comment = "";
       this.submitting = false;
       await this.fetchData2();
     },
